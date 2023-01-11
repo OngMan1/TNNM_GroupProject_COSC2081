@@ -34,5 +34,33 @@ class Authentication {
         String[] result = { username, password };
         return result;
     }
+    public Customer Customer_Login(String[] input) {
+        String[] logging = this.logging_in("customer", input[0], input[1]);
+        if (logging != null) {
+            System.out.println("Customer successfully logged in!");
+            return Customer.createCustomer(logging);
+        } else {
+            System.out.println("Wrong username or password");
+            return null;
+        }
+    }
 
+    public Customer Customer_Login() {
+        return Customer_Login(inputAccount());
+    }
+
+    public Admin Admin_Login(String[] input) {
+        String[] logging = this.logging_in("admin", input[0], input[1]);
+        if (logging != null) {
+            System.out.println("Admin successfully logged in!");
+            return new Admin(logging);
+        } else {
+            System.out.println("Wrong username or password");
+            return null;
+        }
+    }
+
+    public Admin Admin_Login() {
+        return Admin_Login(inputAccount());
+    }
 }

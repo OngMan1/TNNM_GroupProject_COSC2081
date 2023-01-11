@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class Admin {
+class Admin {
     private String username;
     private String password;
 
