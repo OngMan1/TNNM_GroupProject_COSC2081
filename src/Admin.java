@@ -29,10 +29,7 @@ class Admin {
     }
 
     public void viewAllCustomers() {
-        ArrayList<Customer> allCustomers = loadCustomers(this);
-        for (Customer x : allCustomers) {
-            System.out.println(x);
-        }
+        Utilities.printArrayList(loadCustomers());
     }
 
     @Override
@@ -40,8 +37,8 @@ class Admin {
         return "Admin [username=" + username + ", password=" + password + "]";
     }
 
-    public static ArrayList<Customer> loadCustomers(Admin admin) {
-        ArrayList<String[]> loaded = Utilities.loader(Authentication.getUserFile(admin));
+    public ArrayList<Customer> loadCustomers() {
+        ArrayList<String[]> loaded = Utilities.loader(Authentication.getUserFile(this));
         ArrayList<Customer> allCustomers = new ArrayList<>();
         for (String[] x : loaded) {
             allCustomers.add(Customer.createCustomer(x));
