@@ -45,5 +45,10 @@ class Admin {
         }
         return allCustomers;
     }
-
+    public void setOrderStatus(Order order, String status) {
+        order.setOrderStatus(this, status);
+    }
+    public void viewAllOrders() {
+        Utilities.printArrayList(Order.loadOrder());
+    }
 }

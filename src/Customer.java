@@ -46,4 +46,13 @@ class Customer {
                 "(%s) %s [%s:%s]", customerID, customerName, username, password);
     }
 
+    public String[] CustomerFormat() {
+        String[] formatted = {
+                username,
+                password,
+                customerID,
+                customerName,
+        };
+        return formatted;
+    }
 }
