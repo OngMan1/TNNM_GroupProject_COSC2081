@@ -76,8 +76,7 @@ class Utilities {
             reader = new BufferedReader(new FileReader(file_name));
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(TEXT_DELIMITER);
-                all.add(parts);
+                all.add(readParser(line));
             }
             return all;
         } catch (IOException e) { // Handle exception
@@ -112,7 +111,7 @@ class Utilities {
             String line;
             while ((line = reader.readLine()) != null) {
                 boolean[] allSearch = new boolean[searchInput.length];
-                String[] parts = line.split(TEXT_DELIMITER);
+                String[] parts = readParser(line);
                 for (int i = 0; i < searchInput.length; i++) {
                     if (parts[i].equals(searchInput[i])) {
                         allSearch[i] = true;

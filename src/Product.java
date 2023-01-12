@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 class Product {
     // Test
-    private static final String PRODUCT_DETAILS = "products_detail.txt";
+    private static final String PRODUCT_DETAILS = "items.txt";
     private String ProductID, ProductName;
     private double ProductPrice;
     private String ProductCategory;

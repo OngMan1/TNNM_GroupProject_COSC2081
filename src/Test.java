@@ -10,6 +10,8 @@ public class Test {
         // ArrayList<Customer> allCust = Admin.loadCustomers(sessAdmin);
         // Utilities.printArrayList(allCust);
         sessAdmin.viewAllCustomers();
+        Product.browseProducts();
+        sessAdmin.viewAllOrders();
         // sessAdmin.setOrderStatus(, null);
     }
 }
