@@ -4,11 +4,12 @@ import java.util.Comparator;
 class Product {
     // Test
     private static final String PRODUCT_DETAILS = "items.txt";
+    // private static final int P_ID = 0, P_Name = 1, P_Price = 2, P_Category = 3;
     private String ProductID, ProductName;
     private double ProductPrice;
     private String ProductCategory;
 
-    static Comparator<Product> compareToByPrice() {
+    static Comparator<Product> compareToByID() {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
@@ -24,7 +25,7 @@ class Product {
         };
     }
 
-    static Comparator<Product> compareToByID() {
+    static Comparator<Product> compareToByPrice() {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
@@ -100,6 +101,10 @@ class Product {
         }
         return allProducts;
     }
+
+    // searchProduct("001", null, null)
+    // searchProduct(null, "pepsi", null)
+    // searchProduct(null, null, "typeA")
 
     public static ArrayList<Product> searchProduct(String productID, String productName, String category) {
         ArrayList<Product> result = new ArrayList<>();

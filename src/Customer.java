@@ -77,21 +77,25 @@ class Customer {
         this.customerMembership = calculateMembership();
     }
 
-    private Customer(String[] parts) {    // take input as a split string
+    public Customer(String[] parts) {    // take input as a split string
         this(parts[CustomerConstants.USERNAME.VALUE],
                 parts[CustomerConstants.PASSWORD.VALUE],
                 parts[CustomerConstants.CUS_ID.VALUE],
                 parts[CustomerConstants.CUS_NAME.VALUE]);
     }
 
-    public static Customer createCustomer(String[] parts) {
-        if (parts.length == CustomerConstants.values().length) {
-            return new Customer(parts);
-        } else {
-            System.out.println("Arguments overflow (needed " + CustomerConstants.values().length + ", got " + parts.length + ")");
-            return null;
-        }
-    }
+    // public static Customer createCustomer(String[] parts) {
+    // if (parts.length == Cust.values().length) {
+    // return new Customer(parts);
+    // } else {
+    // System.out
+    // .println("Err: arguments overflow (needed " + Cust.values().length + ", got "
+    // + parts.length + ")");
+    // return null;
+    // }
+    // }
+
+    // public static loadCustomerFromFile()
 
     public String toString() {
         return String.format(
@@ -136,4 +140,9 @@ class Customer {
     public String getMembership() {
         return this.customerMembership;
     }
+
+    public void setID(String newID) {
+        this.customerID = newID;
+    }
+
 }

@@ -44,7 +44,7 @@ class Admin {
         ArrayList<String[]> loaded = Utilities.loader(Authentication.getUserFile(this));
         ArrayList<Customer> allCustomers = new ArrayList<>();
         for (String[] x : loaded) {
-            allCustomers.add(Customer.createCustomer(x));
+            allCustomers.add(new Customer(x));
         }
         return allCustomers;
     }
@@ -54,4 +54,13 @@ class Admin {
     public void viewAllOrders() {
         Utilities.printArrayList(Order.loadOrder());
     }
+
+    public void setCustomerID(Customer customer, String newID) {
+        customer.setID(newID);
+    }
+
+    // public void setProductCategory(Product product, String newCategory) {
+    // product.setCategory(newCategory);
+    // }
+
 }

@@ -12,7 +12,7 @@ class Authentication {
     private String[] search(String loginFile, String username, String password) {
         String[] userInput = { username, password };
         return Utilities.searcher(loginFile, userInput);
-    }
+    } // wrapper method
 
     private String[] logging_in(String type, String username, String password) {
         switch (type) {
@@ -38,7 +38,7 @@ class Authentication {
         String[] logging = this.logging_in("customer", input[0], input[1]);
         if (logging != null) {
             System.out.println("Customer successfully logged in!");
-            return Customer.createCustomer(logging);
+            return new Customer(logging);
         } else {
             System.out.println("Wrong username or password");
             return null;
@@ -47,7 +47,7 @@ class Authentication {
 
     public Customer Customer_Login() {
         return Customer_Login(inputAccount());
-    }
+    } // wrapper
 
     public Admin Admin_Login(String[] input) {
         String[] logging = this.logging_in("admin", input[0], input[1]);

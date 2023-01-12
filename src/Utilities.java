@@ -9,7 +9,7 @@ interface IDFormat {
 class Utilities {
     private static final String TEXT_DELIMITER = ",";
 
-    public static String IDFormatter(int currCount) {
+    public static String IDFormatter(String type, int currCount) {
         return String.format("%03d", currCount);
     }
 
@@ -103,6 +103,7 @@ class Utilities {
         return true;
     }
 
+    // searcher(USER DETAIL, {username, password})
     public static String[] searcher(String file_name, String[] searchInput) {
         BufferedReader reader = null;
         try {
@@ -139,6 +140,10 @@ class Utilities {
     }
 
     public static <E> void printArrayList(ArrayList<E> curr) {
-        curr.forEach(x -> System.out.println(x));
+        // curr.forEach(x -> System.out.println(x));
+        for (E x : curr) {
+            System.out.println(x);
+        }
     }
+
 }
