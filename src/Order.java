@@ -3,73 +3,61 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Order {
+interface OrderInfo {
+    String ORDER_DETAILS = "order_details.txt";
+    int ORDER_USER = 0;
+    int ID = 1;
+    int STATUS = 2;
+    int DATE = 3;
+}
 
-    private static final String ORDER_DETAILS = "order_details.txt";
-    private static final String ORDER_PRODUCT = "order_products.txt";
-    private String OrderID;
-    private ArrayList<Product> OrderProducts;
-    private String OrderStatus = null;
+interface OrderStatus {
+    String PLACED = "placed";
+    String DELIVERED = "delivered";
+}
+
+interface OrderProduct {
+    String ORDER_PRODUCT = "order_products.txt";
+    int OR_ID = 0;
+    int PR_ID = 1;
+}
+
+class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
+    private String orderID;
+    private ArrayList<Product> orderProducts;
+    private String orderStatus = null;
     private String userName;
     static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-    private String OrderDate = LocalDate.now().format(dtf);
-
-    public enum Or {
-        // username:id:status:date
-        O_username(0), O_ID(1), O_Status(2), O_Date(3);
-
-        public final int value;
-
-        private Or(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public enum Status {
-        PLACED("placed"), DELIVERED("delivered");
-
-        public final String value;
-
-        private Status(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
+    private LocalDate orderDate = LocalDate.now();
 
     public Order(String userName, String orderID, ArrayList<Product> orderProducts, String orderStatus) {
         this.userName = userName;
-        OrderID = orderID;
-        OrderProducts = orderProducts;
-        OrderStatus = orderStatus;
+        this.orderID = orderID;
+        this.orderProducts = orderProducts;
+        this.orderStatus = orderStatus;
     }
 
     public Order(String userName, String orderID, ArrayList<Product> orderProducts, String orderStatus,
-                 LocalDate orderDate) {
+                 String orderDate) {
         this(userName, orderID, orderProducts, orderStatus);
-        this.OrderDate = orderDate.format(dtf);
+        // this.OrderDate = orderDate.format(dtf);
+        this.orderDate = LocalDate.parse(orderDate, dtf);
     }
 
     public Order(String[] parts) {
-        this(parts[Or.O_username.value],
-                parts[Or.O_ID.value],
-                loadOrderProduct(parts[Or.O_ID.value]),
-                parts[Or.O_Status.value],
-                LocalDate.parse(parts[Or.O_Date.value], dtf));
+        this(parts[OrderInfo.ORDER_USER],
+                parts[OrderInfo.ID],
+                loadOrderProduct(parts[OrderInfo.ID]),
+                parts[OrderInfo.STATUS],
+                parts[OrderInfo.DATE]);
     }
 
     @Override
     public String toString() {
         String formatted = String.format(
                 "(%s) {%s} [%s] - %s === Total: [%.2f]\n",
-                userName, OrderID, OrderStatus, OrderDate, calculateTotal());
-        for (Product x : this.OrderProducts) {
+                userName, orderID, orderStatus, orderDate, calculateTotal());
+        for (Product x : this.orderProducts) {
             formatted += x + "\n";
         }
         return formatted;
@@ -89,8 +77,8 @@ public class Order {
         ArrayList<String[]> raw = Utilities.loader(ORDER_PRODUCT);
         ArrayList<Product> allProducts = new ArrayList<>();
         for (String[] x : raw) {
-            if (x[0].equals(orderID)) {
-                for (Product y : Product.searchProduct(x[1], null, null))
+            if (x[OR_ID].equals(orderID)) {
+                for (Product y : Product.searchProduct(x[PR_ID], null, null))
                     allProducts.add(y);
             }
         }
@@ -101,16 +89,16 @@ public class Order {
     public String[] OrderFormat() {
         String[] formatted = {
                 userName,
-                OrderID,
-                OrderStatus,
-                OrderDate
+                orderID,
+                orderStatus,
+                orderDate.format(dtf)
         };
         return formatted;
     }
 
     private String[] OrderProductFormat(Product product) {
         String[] formatted = {
-                this.OrderID,
+                this.orderID,
                 product.getID()
         };
         return formatted;
@@ -118,7 +106,7 @@ public class Order {
 
     public ArrayList<String[]> OrderProductFormat() {
         ArrayList<String[]> formatted = new ArrayList<>();
-        for (Product x : OrderProducts) {
+        for (Product x : orderProducts) {
             formatted.add(OrderProductFormat(x));
         }
         return formatted;
@@ -126,18 +114,18 @@ public class Order {
 
     public void setOrderStatus(Admin admin, String status) {
         if (admin != null) {
-            if (this.OrderStatus.equals(status)) {
-                System.out.println("Order is already " + this.OrderStatus);
+            if (this.orderStatus.equals(status)) {
+                System.out.println("Order is already " + this.orderStatus);
                 return;
             }
-            if (this.OrderStatus.equals(Status.DELIVERED.value)) {
+            if (this.orderStatus.equals(DELIVERED)) {
                 System.out.println("Order is already delivered");
                 return;
             }
             switch (status) {
-                case "delivered":
+                case "DELIVERED":
                     System.out.println("Order Delivered!");
-                    this.OrderStatus = "delivered";
+                    this.orderStatus = "delivered";
                     return;
                 default:
                     System.out.println("Err: Invalid status");
@@ -163,14 +151,14 @@ public class Order {
 
     public Double calculateTotal() {
         Double sum = 0.0;
-        for (Product x : OrderProducts) {
+        for (Product x : orderProducts) {
             sum += x.getPrice();
         }
-        return sum * (1);
+        return sum;
     }
 
     public String getStatus() {
-        return this.OrderStatus;
+        return this.orderStatus;
     }
 
 }

@@ -24,7 +24,7 @@ interface Membership {
     String PLATINUM = "PLATINUM";
 }
 
-class Customer extends User implements LoginInfo, UserInfo, Membership {
+class Customer extends User implements LoginInfo, UserInfo, Membership, OrderStatus {
     private String customerName;
     private String customerID;
     private ArrayList<Order> customerOrder = new ArrayList<>();
@@ -70,7 +70,7 @@ class Customer extends User implements LoginInfo, UserInfo, Membership {
     public Double calculateTotalSpending() {
         Double totalSpending = 0.0;
         for (Order x : getOrders()) {
-            if (x.getStatus().equals(Order.Status.DELIVERED.value))
+            if (x.getStatus().equals(DELIVERED))
                 totalSpending += x.calculateTotal();
         }
         return totalSpending;

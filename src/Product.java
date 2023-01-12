@@ -1,9 +1,15 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
-class Product {
-    // Test
-    private static final String PRODUCT_DETAILS = "items.txt";
+interface ProductDetail {
+    String PRODUCT_DETAILS = "products_detail.txt";
+    int ID = 0;
+    int NAME = 1;
+    int PRICE = 2;
+    int CATEGORY = 3;
+}
+
+class Product implements ProductDetail {
     // private static final int P_ID = 0, P_Name = 1, P_Price = 2, P_Category = 3;
     private String ProductID, ProductName;
     private double ProductPrice;
@@ -13,14 +19,9 @@ class Product {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
-                Integer sid_a = Integer.parseInt(p1.getID());
-                Integer sid_b = Integer.parseInt(p2.getID());
-                if (sid_a == sid_b)
-                    return 0;
-                else if (sid_a > sid_b)
-                    return 1;
-                else
-                    return -1;
+                return Integer.compare(
+                        Integer.parseInt(p1.getID()),
+                        Integer.parseInt(p2.getID()));
             }
         };
     }
@@ -29,32 +30,11 @@ class Product {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
-                double price1 = p1.getPrice();
-                double price2 = p2.getPrice();
-                if (price1 == price2)
-                    return 0;
-                else if (price1 > price2)
-                    return 1;
-                else
-                    return -1;
+                return Double.compare(p1.getPrice(), p2.getPrice());
             }
         };
     }
 
-    public enum Prod {    // an enum class to store constants
-        // ex: 001:Coke:10000:TypeA
-        P_ID(0), P_NAME(1), P_PRICE(2), P_CATEGORY(3);
-
-        public final int VALUE;
-
-        private Prod(int value) {
-            this.VALUE = value;
-        }
-
-        public int getVALUE() {
-            return VALUE;
-        }
-    }
 
     public Product(String productID, String productName, double productPrice, String productCategory) {
         ProductID = productID;
@@ -64,10 +44,10 @@ class Product {
     }
 
     public Product(String[] parts) {
-        this(parts[Prod.P_ID.VALUE],
-                parts[Prod.P_NAME.VALUE],
-                Double.parseDouble(parts[Prod.P_PRICE.VALUE]),
-                parts[Prod.P_CATEGORY.VALUE]);
+        this(parts[ID],
+                parts[NAME],
+                Double.parseDouble(parts[PRICE]),
+                parts[CATEGORY]);
     }
 
     @Override
@@ -101,10 +81,6 @@ class Product {
         }
         return allProducts;
     }
-
-    // searchProduct("001", null, null)
-    // searchProduct(null, "pepsi", null)
-    // searchProduct(null, null, "typeA")
 
     public static ArrayList<Product> searchProduct(String productID, String productName, String category) {
         ArrayList<Product> result = new ArrayList<>();
