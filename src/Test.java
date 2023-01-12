@@ -5,13 +5,13 @@ public class Test {
                 "admin",
                 "123456"
         };
-        Admin sessAdmin = session.Admin_Login(testing);
-        System.out.println(sessAdmin);
+        //Admin sessAdmin = session.Admin_Login(testing);
+        //System.out.println(sessAdmin);
         // ArrayList<Customer> allCust = Admin.loadCustomers(sessAdmin);
         // Utilities.printArrayList(allCust);
-        sessAdmin.viewAllCustomers();
+        //sessAdmin.viewAllCustomers();
         Product.browseProducts();
-        sessAdmin.viewAllOrders();
+        //sessAdmin.viewAllOrders();
         // sessAdmin.setOrderStatus(, null);
     }
 }

@@ -2,13 +2,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.lang.reflect.Field;
 
-class Admin {
-    private String username;
-    private String password;
+class Admin extends User implements SensitiveData {
 
     public enum Ad {
         // username,password,custID,custName
-        A_username(0), A_password(1);
+        A_USERNAME(0),
+        A_PASSWORD(1);
 
         public final int value;
 
@@ -16,19 +15,15 @@ class Admin {
             this.value = value;
         }
 
-        public int getValue() {
-            return value;
-        }
     }
 
     public Admin(String username, String password) {
-        this.username = username;
-        this.password = password;
+        super(username, password);
     }
 
     public Admin(String[] parts) {
-        this(parts[Ad.A_username.value],
-                parts[Ad.A_password.value]);
+        this(parts[Ad.A_USERNAME.value],
+                parts[Ad.A_PASSWORD.value]);
     }
 
     public void viewAllCustomers() {
@@ -37,11 +32,11 @@ class Admin {
 
     @Override
     public String toString() {
-        return "Admin [username=" + username + ", password=" + password + "]";
+        return "Admin [username=" + super.getUsername() + ", password=" + this.getPassword() + "]";
     }
 
     public ArrayList<Customer> loadCustomers() {
-        ArrayList<String[]> loaded = Utilities.loader(Authentication.getUserFile(this));
+        ArrayList<String[]> loaded = Utilities.loader(SensitiveData.CUSTOMER_DETAILS);
         ArrayList<Customer> allCustomers = new ArrayList<>();
         for (String[] x : loaded) {
             allCustomers.add(new Customer(x));

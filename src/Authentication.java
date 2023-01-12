@@ -1,28 +1,27 @@
-class Authentication {
-    private static final String USER = "user.txt";
-    private static final String ADMIN = "admin.txt";
+interface LoginType {
+    String CUSTOMER = "customer";
+    String ADMIN = "admin";
+}
 
-    public static String getUserFile(Admin admin) {
-        if (admin != null) {
-            return USER;
-        }
-        return null;
-    }
+interface SensitiveData {
+    String CUSTOMER_DETAILS = "user_details.txt";
+    String ADMIN_DETAILS = "admin_details.txt";
+}
 
-    private String[] search(String loginFile, String username, String password) {
-        String[] userInput = { username, password };
-        return Utilities.searcher(loginFile, userInput);
-    } // wrapper method
+interface LoginInfo {
+    int USERNAME = 0;
+    int PASSWORD = 1;
+}
 
-    private String[] logging_in(String type, String username, String password) {
-        switch (type) {
-            case "customer":
-                return search(USER, username, password);
-            case "admin":
-                return search(ADMIN, username, password);
-            default:
-                System.out.println("Err: Wrong login type");
-                return null;
+class Authentication implements LoginType, SensitiveData, LoginInfo {
+    private User createUser(String type, String[] loginRecord) {
+        if (type.equals(CUSTOMER)) {
+            return new Customer(loginRecord);
+        } else if (type.equals(ADMIN)) {
+            return new Admin(loginRecord);
+        } else {
+            System.out.println("Error: Invalid login type");
+            return null;
         }
     }
 
@@ -31,14 +30,43 @@ class Authentication {
         String username = UserInput.getInput();
         System.out.print("Password: ");
         String password = UserInput.getInput();
-        String[] result = { username, password };
+        String[] result = {username, password};
         return result;
     }
+
+    private User login(String type, String username, String password) {
+        String file;
+        switch (type) {
+            case CUSTOMER:
+                file = CUSTOMER_DETAILS;
+                break;
+            case ADMIN:
+                file = ADMIN_DETAILS;
+                break;
+            default:
+                System.out.println("Error: Invalid login type");
+                return null;
+        }
+
+        String[] userInput = {username, password};
+        String[] loginRecord = Utilities.searcher(file, userInput);
+        if (loginRecord == null) {
+            System.out.println("Error: Invalid username or password");
+            return null;
+        }
+
+        if (type.equals(CUSTOMER)) {
+            return createUser(CUSTOMER, loginRecord);
+        } else {
+            return createUser(ADMIN, loginRecord);
+        }
+    }
+
     public Customer Customer_Login(String[] input) {
-        String[] logging = this.logging_in("customer", input[0], input[1]);
-        if (logging != null) {
+        User customer = this.login(CUSTOMER, input[USERNAME], input[PASSWORD]);
+        if (customer != null) {
             System.out.println("Customer successfully logged in!");
-            return new Customer(logging);
+            return (Customer) customer;
         } else {
             System.out.println("Wrong username or password");
             return null;
@@ -50,17 +78,13 @@ class Authentication {
     } // wrapper
 
     public Admin Admin_Login(String[] input) {
-        String[] logging = this.logging_in("admin", input[0], input[1]);
-        if (logging != null) {
+        User admin = this.login(ADMIN, input[USERNAME], input[PASSWORD]);
+        if (admin != null) {
             System.out.println("Admin successfully logged in!");
-            return new Admin(logging);
+            return (Admin) admin;
         } else {
             System.out.println("Wrong username or password");
             return null;
         }
-    }
-
-    public Admin Admin_Login() {
-        return Admin_Login(inputAccount());
     }
 }
