@@ -3,14 +3,14 @@ interface LoginType {
     String ADMIN = "admin";
 }
 
-interface SensitiveData {
-    String CUSTOMER_DETAILS = "user_details.txt";
-    String ADMIN_DETAILS = "admin_details.txt";
-}
-
 interface LoginInfo {
     int USERNAME = 0;
     int PASSWORD = 1;
+}
+
+interface SensitiveData {
+    String CUSTOMER_DETAILS = "user_details.txt";
+    String ADMIN_DETAILS = "admin_details.txt";
 }
 
 class Authentication implements LoginType, SensitiveData, LoginInfo {

@@ -11,15 +11,15 @@ interface OrderInfo {
     int DATE = 3;
 }
 
-interface OrderStatus {
-    String PLACED = "placed";
-    String DELIVERED = "delivered";
-}
-
 interface OrderProduct {
     String ORDER_PRODUCT = "order_products.txt";
     int OR_ID = 0;
     int PR_ID = 1;
+}
+
+interface OrderStatus {
+    String PLACED = "placed";
+    String DELIVERED = "delivered";
 }
 
 class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
@@ -135,10 +135,10 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
             System.out.println("Err: Not Admin");
         }
     }
+
     public static ArrayList<Order> getOrderByCustUsername(String custUsername) {
         ArrayList<Order> result = new ArrayList<>();
         for (Order x : loadOrder()) {
-            // System.out.println(x.userName + " " + custUsername);
             if (x.userName.equals(custUsername)) {
                 result.add(x);
             }

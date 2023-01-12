@@ -1,29 +1,14 @@
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.lang.reflect.Field;
 
-class Admin extends User implements SensitiveData {
-
-    public enum Ad {
-        // username,password,custID,custName
-        A_USERNAME(0),
-        A_PASSWORD(1);
-
-        public final int value;
-
-        private Ad(int value) {
-            this.value = value;
-        }
-
-    }
+class Admin extends User implements SensitiveData, LoginInfo {
 
     public Admin(String username, String password) {
         super(username, password);
     }
 
     public Admin(String[] parts) {
-        this(parts[Ad.A_USERNAME.value],
-                parts[Ad.A_PASSWORD.value]);
+        this(parts[USERNAME],
+                parts[PASSWORD]);
     }
 
     public void viewAllCustomers() {
