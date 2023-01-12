@@ -146,4 +146,30 @@ class Utilities {
         }
     }
 
+    public static <E> String arrayListToString(ArrayList<E> curr) {
+        String allCurr = "";
+        for (E x : curr) {
+            allCurr += x.toString() + "\n";
+        }
+        return allCurr;
+    }
+
+    public static <E> void addToArrayList(ArrayList<E> to, E from) {
+        to.add(from);
+    }
+
+    public static <E> boolean isNull(E thing) {
+        if (thing == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isInRange(double value, double[] range) {
+        if (range.length != 2) {
+            return false;
+        }
+        return value >= range[0] && value <= range[1];
+    }
+
 }

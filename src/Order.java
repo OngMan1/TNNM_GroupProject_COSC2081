@@ -40,7 +40,6 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
     public Order(String userName, String orderID, ArrayList<Product> orderProducts, String orderStatus,
                  String orderDate) {
         this(userName, orderID, orderProducts, orderStatus);
-        // this.OrderDate = orderDate.format(dtf);
         this.orderDate = LocalDate.parse(orderDate, dtf);
     }
 
@@ -54,13 +53,17 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
 
     @Override
     public String toString() {
-        String formatted = String.format(
-                "(%s) {%s} [%s] - %s === Total: [%.2f]\n",
-                userName, orderID, orderStatus, orderDate, calculateTotal());
-        for (Product x : this.orderProducts) {
-            formatted += x + "\n";
-        }
-        return formatted;
+        return getShortOrderInfo() + "\n" + getOrderProducts();
+    }
+
+    public String getShortOrderInfo() {
+        return String.format(
+                "(%s) {%s} [%s] - %s === Total: [%.2f]",
+                getUsername(), getID(), getStatus(), getDate(), calculateTotal());
+    }
+
+    public String getOrderProducts() {
+        return Utilities.arrayListToString(orderProducts);
     }
 
     public static ArrayList<Order> loadOrder() {
@@ -78,7 +81,7 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
         ArrayList<Product> allProducts = new ArrayList<>();
         for (String[] x : raw) {
             if (x[OR_ID].equals(orderID)) {
-                for (Product y : Product.searchProduct(x[PR_ID], null, null))
+                for (Product y : Product.searchProductByID(x[PR_ID]))
                     allProducts.add(y);
             }
         }
@@ -88,10 +91,10 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
 
     public String[] OrderFormat() {
         String[] formatted = {
-                userName,
-                orderID,
-                orderStatus,
-                orderDate.format(dtf)
+                getUsername(),
+                getID(),
+                getStatus(),
+                getDate().format(dtf)
         };
         return formatted;
     }
@@ -145,6 +148,7 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
         }
         return result;
     }
+
     private static void totalWithDiscount(Customer customer, Order order) {
         // To be implemented
     }
@@ -159,6 +163,18 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
 
     public String getStatus() {
         return this.orderStatus;
+    }
+
+    public String getID() {
+        return this.orderID;
+    }
+
+    public String getUsername() {
+        return this.userName;
+    }
+
+    public LocalDate getDate() {
+        return this.orderDate;
     }
 
 }

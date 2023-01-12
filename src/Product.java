@@ -35,7 +35,6 @@ class Product implements ProductDetail {
         };
     }
 
-
     public Product(String productID, String productName, double productPrice, String productCategory) {
         ProductID = productID;
         ProductName = productName;
@@ -82,26 +81,25 @@ class Product implements ProductDetail {
         return allProducts;
     }
 
-    public static ArrayList<Product> searchProduct(String productID, String productName, String category) {
+    public static ArrayList<Product> searchProductByID(String productID) {
+        return searchProduct(productID, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByName(String productName) {
+        return searchProduct(null, productName, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategory(String productCategory) {
+        return searchProduct(null, null, productCategory);
+    }
+
+    private static ArrayList<Product> searchProduct(String productID, String productName, String category) {
         ArrayList<Product> result = new ArrayList<>();
         for (Product x : loadProduct()) {
-            if (productID != null) {
-                if (x.ProductID.equals(productID)) {
-                    result.add(x);
-                    continue;
-                }
-            }
-            if (productName != null) {
-                if (x.ProductName.equals(productName)) {
-                    result.add(x);
-                    continue;
-                }
-            }
-            if (category != null) {
-                if (x.ProductCategory.equals(category)) {
-                    result.add(x);
-                    continue;
-                }
+            if ((productID != null && x.ProductID.equals(productID)) ||
+                    (productName != null && x.ProductName.equals(productName)) ||
+                    (category != null && x.ProductCategory.equals(category))) {
+                result.add(x);
             }
         }
         return result;

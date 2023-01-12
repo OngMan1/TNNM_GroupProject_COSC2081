@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 interface UserInfo {
     int USERNAME = 0;
     int PASSWORD = 1;
@@ -30,7 +29,6 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
     private ArrayList<Order> customerOrder = new ArrayList<>();
     private String customerMembership;
 
-
     private Customer(String username, String password, String customerID, String customerName) {
         super(username, password);
         this.customerID = customerID;
@@ -50,16 +48,25 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
 
     public String toString() {
         return String.format(
-                "(%s) %s [%s:%s] == [%.2f] {{%s}}", customerID, customerName, getUsername(), getPassword(),
-                calculateTotalSpending(), customerMembership);
+                "%s %s == [%.2f] {{%s}}",
+                getCustomerInfo(), getCustomerAccount(),
+                getCustomerSpending(), getMembership());
+    }
+
+    public String getCustomerInfo() {
+        return String.format("(%s) %s", getID(), getName());
+    }
+
+    public String getCustomerAccount() {
+        return String.format("[%s:%s]", getUsername(), getPassword());
     }
 
     public String[] CustomerFormat() {
         String[] formatted = {
                 getUsername(),
                 getPassword(),
-                customerID,
-                customerName,
+                getID(),
+                getName(),
         };
         return formatted;
     }
@@ -67,7 +74,7 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
     public ArrayList<Order> getOrders() {
         return this.customerOrder;
     }
-    public Double calculateTotalSpending() {
+    public Double getCustomerSpending() {
         Double totalSpending = 0.0;
         for (Order x : getOrders()) {
             if (x.getStatus().equals(DELIVERED))
@@ -76,16 +83,15 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         return totalSpending;
     }
 
-
-
     public String calculateMembership() {
-        if (calculateTotalSpending() >= Membership.PLATINUM_THRES) {
+        double totalSpending = getCustomerSpending();
+        if (totalSpending >= Membership.PLATINUM_THRES) {
             return Membership.PLATINUM;
         }
-        if (calculateTotalSpending() >= Membership.GOLD_THRES) {
+        if (totalSpending >= Membership.GOLD_THRES) {
             return Membership.GOLD;
         }
-        if (calculateTotalSpending() >= Membership.SILVER_THRES) {
+        if (totalSpending >= Membership.SILVER_THRES) {
             return Membership.SILVER;
         }
         return Membership.NORMAL;
@@ -95,8 +101,15 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         return this.customerMembership;
     }
 
+    public String getName() {
+        return this.customerName;
+    }
+
+    public String getID() {
+        return this.customerID;
+    }
+
     public void setID(String newID) {
         this.customerID = newID;
     }
-
 }
