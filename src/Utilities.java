@@ -144,4 +144,12 @@ class Utilities {
         curr.forEach(x -> System.out.println(x));
     }
 
+    public static Double calculateTotal(ArrayList<Product> products) {
+        Double sum = 0.0;
+        for (Product x : products) {
+            sum += x.getPrice();
+        }
+        return sum;
+    }
+
 }
