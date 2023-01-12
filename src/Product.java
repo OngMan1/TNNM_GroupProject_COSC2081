@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 class Product {
     // Test
@@ -6,6 +7,38 @@ class Product {
     private String ProductID, ProductName;
     private double ProductPrice;
     private String ProductCategory;
+
+    static Comparator<Product> compareToByPrice() {
+        return new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                Integer sid_a = Integer.parseInt(p1.getID());
+                Integer sid_b = Integer.parseInt(p2.getID());
+                if (sid_a == sid_b)
+                    return 0;
+                else if (sid_a > sid_b)
+                    return 1;
+                else
+                    return -1;
+            }
+        };
+    }
+
+    static Comparator<Product> compareToByID() {
+        return new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                double price1 = p1.getPrice();
+                double price2 = p2.getPrice();
+                if (price1 == price2)
+                    return 0;
+                else if (price1 > price2)
+                    return 1;
+                else
+                    return -1;
+            }
+        };
+    }
 
     public enum Prod {    // an enum class to store constants
         // ex: 001:Coke:10000:TypeA

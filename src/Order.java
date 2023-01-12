@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Order {
 
@@ -67,7 +68,7 @@ public class Order {
     public String toString() {
         String formatted = String.format(
                 "(%s) {%s} [%s] - %s === Total: [%.2f]\n",
-                userName, OrderID, OrderStatus, OrderDate, Utilities.calculateTotal(OrderProducts));
+                userName, OrderID, OrderStatus, OrderDate, calculateTotal());
         for (Product x : this.OrderProducts) {
             formatted += x + "\n";
         }
@@ -93,6 +94,7 @@ public class Order {
                     allProducts.add(y);
             }
         }
+        Collections.sort(allProducts, Product.compareToByID());
         return allProducts;
     }
 
@@ -145,4 +147,30 @@ public class Order {
             System.out.println("Err: Not Admin");
         }
     }
+    public static ArrayList<Order> getOrderByCustUsername(String custUsername) {
+        ArrayList<Order> result = new ArrayList<>();
+        for (Order x : loadOrder()) {
+            // System.out.println(x.userName + " " + custUsername);
+            if (x.userName.equals(custUsername)) {
+                result.add(x);
+            }
+        }
+        return result;
+    }
+    private static void totalWithDiscount(Customer customer, Order order) {
+        // To be implemented
+    }
+
+    public Double calculateTotal() {
+        Double sum = 0.0;
+        for (Product x : OrderProducts) {
+            sum += x.getPrice();
+        }
+        return sum * (1);
+    }
+
+    public String getStatus() {
+        return this.OrderStatus;
+    }
+
 }
