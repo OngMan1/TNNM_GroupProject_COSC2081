@@ -77,7 +77,7 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         double totalSpending = 0;
         for (Order x : getOrders()) {
             if (x.getOrderStatus().equals(DELIVERED))
-                totalSpending += x.calculateTotal();
+                totalSpending += x.calculateTotal() - x.getOrderDiscount();
         }
         return totalSpending;
     }

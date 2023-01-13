@@ -61,13 +61,11 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
 
     public String getOrderInfo() {
         String info = String.format(
-                "(%s) {%s} [%s] - %s === Total: [%.2f]",
-                getOrderUsername(), getOrderID(), getOrderStatus(), getOrderDate().format(dtf), calculateTotal());
-        if (getOrderStatus().equals(DELIVERED)) {
-            return info + String.format("\n(%s) Discounted Total: %.2f", getOrderCustomer().getCustomerMembership(),
-                    calculateTotal() - getOrderDiscount());
-        }
-        return info + getOrderDiscountString();
+                "(%s) {%s} [%s] - %s === Total: [%.2f]\n(%s) Discounted Total: %.2f",
+                getOrderUsername(), getOrderID(), getOrderStatus(), getOrderDate().format(dtf), calculateTotal(),
+                getOrderCustomer().getCustomerMembership(), calculateTotal() - getOrderDiscount());
+        return info;
+
     }
 
     public Customer getOrderCustomer() {

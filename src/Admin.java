@@ -45,13 +45,10 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
             System.out.println("Order status did not change");
             return order;
         }
-        Product discount = new Product(order.getOrderCustomer().getCustomerMembership(), "DISCOUNT",
-                -order.getOrderDiscount(), null);
-        order.addOrderProducts(discount);
         Writer.replaceLine(OrderInfo.ORDER_DETAILS,
                 String.format("%s%s%s", order.getOrderUsername(), Delimiter.TEXT_DELIMITER, order.getOrderID()),
                 Writer.writeParser(order.getWriteFormat()));
-        if (Loader.rawSearcher(ORDER_TOTALS, new String[] { order.getOrderID() }) == null) {
+        if (Loader.rawSearcher(ORDER_TOTALS, new String[] { order.getOrderID() }) != null) {
             System.out.println("Err: Order Total already exists");
             return null;
         }
