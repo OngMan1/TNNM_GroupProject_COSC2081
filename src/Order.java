@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 
 interface OrderInfo {
     String ORDER_DETAILS = "order_details.txt";
@@ -22,7 +22,7 @@ interface OrderStatus {
     String DELIVERED = "delivered";
 }
 
-class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
+class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, AttributeFormat {
     private String orderID;
     private ArrayList<Product> orderProducts;
     private String orderStatus = null;
@@ -46,7 +46,7 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
     public Order(String[] parts) {
         this(parts[OrderInfo.ORDER_USER],
                 parts[OrderInfo.ID],
-                loadOrderProduct(parts[OrderInfo.ID]),
+                Loader.loadOrderProduct(parts[OrderInfo.ID]),
                 parts[OrderInfo.STATUS],
                 parts[OrderInfo.DATE]);
     }
@@ -64,39 +64,6 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
 
     public String getOrderProducts() {
         return Utilities.arrayListToString(orderProducts);
-    }
-
-    public static ArrayList<Order> loadOrder() {
-        ArrayList<String[]> loaded = Utilities.loader(ORDER_DETAILS);
-        ArrayList<Order> allOrders = new ArrayList<>();
-        for (String[] x : loaded) {
-            allOrders.add(new Order(x));
-        }
-        return allOrders;
-    }
-
-    public static ArrayList<Product> loadOrderProduct(String orderID) {
-        // orderID:productID
-        ArrayList<String[]> raw = Utilities.loader(ORDER_PRODUCT);
-        ArrayList<Product> allProducts = new ArrayList<>();
-        for (String[] x : raw) {
-            if (x[OR_ID].equals(orderID)) {
-                for (Product y : Product.searchProductByID(x[PR_ID]))
-                    allProducts.add(y);
-            }
-        }
-        Collections.sort(allProducts, Product.compareToByID());
-        return allProducts;
-    }
-
-    public String[] OrderFormat() {
-        String[] formatted = {
-                getUsername(),
-                getID(),
-                getStatus(),
-                getDate().format(dtf)
-        };
-        return formatted;
     }
 
     private String[] OrderProductFormat(Product product) {
@@ -141,16 +108,12 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
 
     public static ArrayList<Order> getOrderByCustUsername(String custUsername) {
         ArrayList<Order> result = new ArrayList<>();
-        for (Order x : loadOrder()) {
+        for (Order x : Loader.loadOrder()) {
             if (x.userName.equals(custUsername)) {
                 result.add(x);
             }
         }
         return result;
-    }
-
-    private static void totalWithDiscount(Customer customer, Order order) {
-        // To be implemented
     }
 
     public Double calculateTotal() {
@@ -159,6 +122,32 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct {
             sum += x.getPrice();
         }
         return sum;
+    }
+    @Override
+    public String[] getWriteFormat() {
+        return new String[] {
+                getUsername(),
+                getID(),
+                getStatus(),
+                getDate().format(dtf)
+        };
+    }
+
+    public ArrayList<String[]> getOrderProductWriteFormat() {
+        ArrayList<String[]> formatted = new ArrayList<>();
+        for (Product x : orderProducts) {
+            formatted.add(OrderProductFormat(x));
+        }
+        return formatted;
+    }
+
+    public static Comparator<Order> byDate() {
+        return new Comparator<Order>() {
+            @Override
+            public int compare(Order o1, Order o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        };
     }
 
     public String getStatus() {

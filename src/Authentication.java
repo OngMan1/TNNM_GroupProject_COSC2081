@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 interface LoginType {
     String CUSTOMER = "customer";
     String ADMIN = "admin";
@@ -34,6 +35,37 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
         return result;
     }
 
+    public Customer customerRegistration(String[] account, String name) {
+        if (Loader.rawSearcher(CUSTOMER_DETAILS, new String[] { account[USERNAME] }) == null) {
+            ArrayList<String[]> allCustomers = Loader.rawLoader(CUSTOMER_DETAILS);
+            int totalCustomerCount = allCustomers.size();
+            String[] newCustomerInfo = {
+                    account[USERNAME],
+                    account[PASSWORD],
+                    Utilities.IDFormatter(totalCustomerCount),
+                    name
+            };
+            Writer.appendFile(CUSTOMER_DETAILS, Writer.writeParser(newCustomerInfo));
+            Customer newCustomer = new Customer(newCustomerInfo);
+            return newCustomer;
+        } else {
+            return null;
+        }
+    }
+
+    public void customerRegistration() {
+        System.out.println("Creating new customer account");
+        String[] account = inputAccount();
+        System.out.println("Enter name: ");
+        String name = UserInput.getInput();
+        Customer newUser = customerRegistration(
+                account, name);
+        if (newUser != null) {
+            System.out.println("User created sucessfully");
+        } else {
+            System.out.println("User already exist");
+        }
+    }
     private User login(String type, String username, String password) {
         String file;
         switch (type) {
@@ -49,7 +81,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
         }
 
         String[] userInput = {username, password};
-        String[] loginRecord = Utilities.searcher(file, userInput);
+        String[] loginRecord = Loader.rawSearcher(file, userInput);
         if (loginRecord == null) {
             System.out.println("Error: Invalid username or password");
             return null;
@@ -75,7 +107,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
 
     public Customer Customer_Login() {
         return Customer_Login(inputAccount());
-    } // wrapper
+    }
 
     public Admin Admin_Login(String[] input) {
         User admin = this.login(ADMIN, input[USERNAME], input[PASSWORD]);
@@ -86,5 +118,8 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
             System.out.println("Wrong username or password");
             return null;
         }
+    }
+    public Admin Admin_Login() {
+        return Admin_Login(inputAccount());
     }
 }

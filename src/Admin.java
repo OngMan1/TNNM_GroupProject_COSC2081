@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-class Admin extends User implements SensitiveData, LoginInfo {
+class Admin extends User implements SensitiveData, LoginInfo, ProductDetail {
 
     public Admin(String username, String password) {
         super(username, password);
@@ -12,7 +12,7 @@ class Admin extends User implements SensitiveData, LoginInfo {
     }
 
     public void viewAllCustomers(boolean isShort) {
-        ArrayList<Customer> curr = loadCustomers();
+        ArrayList<Customer> curr = Loader.loadCustomers();
 
         if (isShort) {
             for (Customer x : curr) {
@@ -27,16 +27,8 @@ class Admin extends User implements SensitiveData, LoginInfo {
 
     @Override
     public String toString() {
-        return "Admin [username=" + super.getUsername() + ", password=" + this.getPassword() + "]";
-    }
-
-    public ArrayList<Customer> loadCustomers() {
-        ArrayList<String[]> loaded = Utilities.loader(SensitiveData.CUSTOMER_DETAILS);
-        ArrayList<Customer> allCustomers = new ArrayList<>();
-        for (String[] x : loaded) {
-            allCustomers.add(new Customer(x));
-        }
-        return allCustomers;
+        return "Admin [username=" + super.getUsername() + ", " +
+                "password=" + super.getPassword() + "]";
     }
 
     public void setOrderStatus(Order order, String status) {
@@ -44,7 +36,7 @@ class Admin extends User implements SensitiveData, LoginInfo {
     }
 
     public void viewAllOrders(boolean isShort) {
-        ArrayList<Order> curr = Order.loadOrder();
+        ArrayList<Order> curr = Loader.loadOrder();
 
         if (isShort) {
             for (Order x : curr) {
@@ -57,59 +49,67 @@ class Admin extends User implements SensitiveData, LoginInfo {
     }
 
     public ArrayList<Customer> searchCustomerByUsername(String customerUsername) {
-        return searchCustomer(customerUsername, null, null, null, null);
+        return Searcher.searchCustomer(customerUsername, null, null, null, null);
     }
 
     public ArrayList<Customer> searchCustomerByID(String customerID) {
-        return searchCustomer(null, customerID, null, null, null);
+        return Searcher.searchCustomer(null, customerID, null, null, null);
     }
 
     public ArrayList<Customer> searchCustomerByName(String customerName) {
-        return searchCustomer(null, null, customerName, null, null);
+        return Searcher.searchCustomer(null, null, customerName, null, null);
     }
 
     public ArrayList<Customer> searchCustomerBySpendingRange(double min, double max) {
-        if (min >= 0 && max >= min) {
-            double[] range = { min, max };
-            searchCustomerBySpendingRange(range);
-        }
-        return null;
+        return Searcher.searchCustomer(null, null, null, new double[] { min, max }, null);
     }
 
     public ArrayList<Customer> searchCustomerByMembership(String customerMembership) {
-        return searchCustomer(null, null, null, null, customerMembership);
+        return Searcher.searchCustomer(null, null, null, null, customerMembership);
     }
 
-    private ArrayList<Customer> searchCustomerBySpendingRange(double[] customerSpendingRange) {
-        return searchCustomer(null, null, null, customerSpendingRange, null);
-    }
-
-    private ArrayList<Customer> searchCustomer(String customerUsername, String customerID, String customerName,
-                                               double[] customerSpendingRange,
-                                               String customerMembership) {
-        ArrayList<Customer> curr = loadCustomers();
-        ArrayList<Customer> res = new ArrayList<>();
-        for (Customer x : curr) {
-            if ((customerUsername != null && x.getUsername().equals(customerUsername)) ||
-                    (customerID != null && x.getID().equals(customerID)) ||
-                    (customerName != null && x.getName().equals(customerName)) ||
-                    (customerSpendingRange != null
-                            && Utilities.isInRange(x.getCustomerSpending(), customerSpendingRange))
-                    ||
-                    (customerMembership != null && x.getMembership().equals(customerMembership))) {
-                res.add(x);
-            }
+    public Product addProduct(String[] productInfo) {
+        if (Loader.rawSearcher(PRODUCT_DETAILS, new String[] { null, productInfo[ProductDetail.NAME] }) == null) {
+            ArrayList<String[]> allProducts = Loader.rawLoader(PRODUCT_DETAILS);
+            int totalProductCount = allProducts.size();
+            String[] newProductInfo = {
+                    Utilities.IDFormatter(totalProductCount),
+                    productInfo[ProductDetail.NAME],
+                    productInfo[ProductDetail.PRICE],
+                    productInfo[ProductDetail.CATEGORY]
+            };
+            Writer.appendFile(PRODUCT_DETAILS, Writer.writeParser(newProductInfo));
+            Product newProduct = new Product(newProductInfo);
+            return newProduct;
+        } else {
+            return null;
         }
-        return res;
-
     }
 
+    public void addProduct() {
+        System.out.println("Adding new product");
+        System.out.println("Enter Product Name: ");
+        String productName = UserInput.getInput();
+        System.out.println("Enter Product Price: ");
+        Double productPrice = Double.parseDouble(UserInput.getInput());
+        System.out.println("Enter Product Category: ");
+        String productCategory = UserInput.getInput();
+
+        Product newProduct = addProduct(new String[] {
+                null,
+                productName,
+                String.valueOf(productPrice),
+                productCategory,
+        });
+        if (newProduct != null) {
+            System.out.println("Product added successfully");
+        } else {
+            System.out.println("Product already exist");
+        }
+    }
     public void setCustomerID(Customer customer, String newID) {
         customer.setID(newID);
     }
 
-    // public void setProductCategory(Product product, String newCategory) {
-    // product.setCategory(newCategory);
-    // }
 
 }
