@@ -43,11 +43,16 @@ public class ProductSearchCLI implements CLI, ProductCLIIndex {
                 case BY_NAME_ID:
                     System.out.println("Enter product name or ID");
                     query = UserInput.getInput();
+                    if (query == null)
+                        break;
                     productFiltered.addAll(Searcher.searchProductByNameOrID(query));
                     break;
                 case BY_CATEGORY:
                     System.out.println("Enter category name or ID");
                     query = UserInput.getInput();
+                    if (query == null)
+                        break;
+
                     productFiltered.addAll(Searcher.searchProductByCategory(query));
                     break;
                 case BY_PRICE_RANGE:

@@ -143,10 +143,10 @@ class Searcher {
 
     public static OrderTotals searchOrderTotalFromOrderID(String orderID) {
         ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
-        Utilities.printArrayList(allOrderTotals);
+        // Utilities.printArrayList(allOrderTotals);
         for (OrderTotals x : allOrderTotals) {
             // System.out.println(x.getOrderID() + " " + orderID);
-            if (x.getOrderID().equals(orderID)) {
+            if (x != null && x.getOrderID().equals(orderID)) {
                 return x;
             }
         }

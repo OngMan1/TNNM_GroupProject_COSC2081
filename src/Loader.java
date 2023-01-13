@@ -24,7 +24,7 @@ class Loader
             if (!file.exists()) {
                 file.createNewFile();
             }
-            // Writer.removeEmptyLines(file_name);
+            Writer.removeEmptyLines(file_name);
             reader = new BufferedReader(new FileReader(file_name));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -123,10 +123,14 @@ class Loader
     }
 
     public static String[] rawSearcher(String file_name, String[] searchInput) {
-        return rawSearcher(file_name, searchInput, true);
+        return rawSearcher(file_name, searchInput, true, false);
     }
 
-    public static String[] rawSearcher(String file_name, String[] searchInput, boolean matchCase) {
+    public static String[] rawSearcher(String file_name, String[] searchInput, boolean matchAll) {
+        return rawSearcher(file_name, searchInput, true, true);
+    }
+
+    public static String[] rawSearcher(String file_name, String[] searchInput, boolean matchCase, boolean matchAll) {
         BufferedReader reader = null;
 
         try {
@@ -142,22 +146,26 @@ class Loader
                 String[] parts = Loader.readParser(line);
                 if (matchCase) {
                     for (int i = 0; i < searchInput.length; i++) {
-                        allSearch[i] = true;
+                        allSearch[i] = false;
                         if (searchInput[i] == null) {
                             continue;
                         }
-                        if (!searchInput[i].startsWith(parts[i])) {
-                            allSearch[i] = false;
+                        if (matchAll) {
+                            if (searchInput[i].equals(parts[i])) {
+                                allSearch[i] = true;
+                            }
+                        } else if (searchInput[i].startsWith(parts[i])) {
+                            allSearch[i] = true;
                         }
                     }
                 } else {
                     for (int i = 0; i < searchInput.length; i++) {
-                        allSearch[i] = true;
+                        allSearch[i] = false;
                         if (searchInput[i] == null) {
                             continue;
                         }
-                        if (!searchInput[i].toLowerCase().startsWith(parts[i].toLowerCase())) {
-                            allSearch[i] = false;
+                        if (searchInput[i].toLowerCase().startsWith(parts[i].toLowerCase())) {
+                            allSearch[i] = true;
                         }
                     }
                 }

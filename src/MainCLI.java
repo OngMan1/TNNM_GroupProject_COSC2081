@@ -42,7 +42,8 @@ public class MainCLI implements CLI, MainCLIIndex {
                 session.run();
                 break;
             case CREATE_CUSTOMER_ACCOUNT:
-                // createCustomerAccount();
+                Authentication tmp = new Authentication();
+                tmp.customerRegistration();
                 break;
             default:
                 System.out.println("Invalid option");

@@ -37,7 +37,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
     }
 
     public Customer customerRegistration(String[] account, String name) {
-        if (Loader.rawSearcher(CUSTOMER_DETAILS, new String[] { account[USERNAME] }) == null) {
+        if (Loader.rawSearcher(CUSTOMER_DETAILS, new String[] { account[USERNAME] }, true) == null) {
             ArrayList<String[]> allCustomers = Loader.rawLoader(CUSTOMER_DETAILS);
             int totalCustomerCount = allCustomers.size();
             String[] newCustomerInfo = {
@@ -84,7 +84,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
         }
 
         String[] userInput = {username, password};
-        String[] loginRecord = Loader.rawSearcher(file, userInput);
+        String[] loginRecord = Loader.rawSearcher(file, userInput, true, true);
         if (loginRecord == null) {
             System.out.println("Error: Invalid username or password");
             return null;

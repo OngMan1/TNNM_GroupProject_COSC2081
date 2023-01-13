@@ -22,8 +22,12 @@ public class AdminCLI implements CLI, AdminCLIIndex {
                 "dillymencalkshitherward"
         };
         Admin currAdmin = session.Admin_Login(testing);
+        if (currAdmin == null) {
+            return state;
+        }
         // Admin sessAdmin = session.Admin_Login();
         while (state) {
+
             UserInput.clearConsole();
             Utilities.printStringBullet(getOptions());
             System.out.println("Enter an option: ");

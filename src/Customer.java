@@ -117,7 +117,7 @@ class Customer extends User implements LoginInfo, UserInfo, OrderStatus {
     }
 
     public boolean setCustomerUsername(String newUsername) {
-        if (Loader.rawSearcher(SensitiveData.CUSTOMER_DETAILS, new String[] { newUsername }) != null) {
+        if (Loader.rawSearcher(SensitiveData.CUSTOMER_DETAILS, new String[] { newUsername }, true) != null) {
             System.out.println("Username already exist!");
             return false;
         }
@@ -179,6 +179,7 @@ class Customer extends User implements LoginInfo, UserInfo, OrderStatus {
                 order.getWriteFormat()));
         for (String[] x : order.getOrderProductWriteFormat()) {
             Writer.appendFile(OrderProduct.ORDER_PRODUCT, Writer.writeParser(x));
+            Writer.appendFile(OrderProduct.ORDER_PRODUCT, "\n");
         }
         return order;
     }

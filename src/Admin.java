@@ -78,19 +78,25 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         }
         System.out.println(oldOrder);
         System.out.println("Change to " + OrderStatus.DELIVERED + "? (Y/N): ");
-        if (UserInput.getConfirmation("Y", "N") && oldOrder.setOrderStatus(OrderStatus.DELIVERED)) {
+        if (UserInput.getConfirmation("Y", "N") && oldOrder.getOrderStatus().equals(OrderStatus.PLACED)) {
             System.out.println("New order: ");
             System.out.println(oldOrder);
             System.out.println("Confirm changes? (Y/N):");
             if (UserInput.getConfirmation("Y", "N")) {
+                Order newOrder = new Order(new String[] {
+                        oldOrder.getOrderUsername(),
+                        oldOrder.getOrderID(),
+                        OrderStatus.DELIVERED,
+                        oldOrder.getOrderDate().format(DateFormat.dtf)
+                });
                 Writer.replaceLine(OrderInfo.ORDER_DETAILS,
                         String.format("%s%s%s", oldOrder.getOrderUsername(), Delimiter.TEXT_DELIMITER,
                                 oldOrder.getOrderID()),
-                        Writer.writeParser(oldOrder.getWriteFormat()));
+                        Writer.writeParser(newOrder.getWriteFormat()));
 
                 Writer.appendFile(ORDER_TOTALS, Writer
                         .writeParser(
-                                (new OrderTotals(oldOrder.getOrderID(), oldOrder.getOrderDiscountTotal()))
+                                (new OrderTotals(newOrder.getOrderID(), newOrder.getOrderDiscountTotal()))
                                         .getWriteFormat()));
                 System.out.println("Order status changed!");
                 return;
@@ -280,7 +286,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
 
     public double getTotalRevenue() {
         ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
-        double totalRevenue = 0;
+        Double totalRevenue = 0.0;
         for (OrderTotals x : allOrderTotals) {
             totalRevenue += x.getOrderTotals();
         }

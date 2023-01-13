@@ -39,12 +39,12 @@ public class StatisticCLI implements CLI, StatisticCLIIndex {
         }
         switch (command) {
             case TOTAL_REVENUE:
-                System.out.println("Total revenue = " + admin.getTotalRevenue());
+                System.out.printf("Total revenue = %.2f\n", admin.getTotalRevenue());
                 break;
             case REVENUE_BY_DATE:
                 System.out.println("Enter date (" + DateFormat.dateFormat + ")");
                 String date = UserInput.getInput();
-                System.out.println("Revenue on day " + date + " = " + admin.getRevenueOnDay(date));
+                System.out.printf("Revenue on day %s = %.2f\n", date, admin.getRevenueOnDay(date));
                 break;
             case PRODUCTS_BY_SALES:
                 System.out.println("Sort (DESC/ASC)");
