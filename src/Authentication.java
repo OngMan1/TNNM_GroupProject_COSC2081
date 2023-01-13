@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 interface LoginType {
     String CUSTOMER = "customer";
     String ADMIN = "admin";
@@ -62,10 +63,12 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
                 account, name);
         if (newUser != null) {
             System.out.println("User created sucessfully");
+            System.out.println(newUser);
         } else {
             System.out.println("User already exist");
         }
     }
+
     private User login(String type, String username, String password) {
         String file;
         switch (type) {
@@ -119,6 +122,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
             return null;
         }
     }
+
     public Admin Admin_Login() {
         return Admin_Login(inputAccount());
     }

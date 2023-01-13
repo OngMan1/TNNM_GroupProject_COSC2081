@@ -7,4 +7,12 @@ public class UserInput {
         String input = sc.nextLine();
         return input;
     }
+
+    public static boolean getConfirmation(String yes, String no) {
+        String input = getInput();
+        if (input.equalsIgnoreCase(yes)) {
+            return true;
+        }
+        return false;
+    }
 }

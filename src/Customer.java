@@ -33,9 +33,7 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         super(username, password);
         this.customerID = customerID;
         this.customerName = customerName;
-        this.customerOrder.addAll(Order.getOrderByCustUsername(username));
-        this.customerMembership = calculateMembership();
-        this.customerOrder.addAll(Order.getOrderByCustUsername(username));
+        this.customerOrder.addAll(Searcher.searchOrderByUsername(username));
         this.customerMembership = calculateMembership();
     }
 
@@ -50,11 +48,11 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         return String.format(
                 "%s %s == [%.2f] {{%s}}",
                 getCustomerInfo(), getCustomerAccount(),
-                getCustomerSpending(), getMembership());
+                getCustomerSpending(), getCustomerMembership());
     }
 
     public String getCustomerInfo() {
-        return String.format("(%s) %s", getID(), getName());
+        return String.format("(%s) %s", getCustomerID(), getCustomerName());
     }
 
     public String getCustomerAccount() {
@@ -65,8 +63,8 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         String[] formatted = {
                 getUsername(),
                 getPassword(),
-                getID(),
-                getName(),
+                getCustomerID(),
+                getCustomerName(),
         };
         return formatted;
     }
@@ -74,10 +72,11 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
     public ArrayList<Order> getOrders() {
         return this.customerOrder;
     }
-    public Double getCustomerSpending() {
-        Double totalSpending = 0.0;
+
+    public double getCustomerSpending() {
+        double totalSpending = 0;
         for (Order x : getOrders()) {
-            if (x.getStatus().equals(DELIVERED))
+            if (x.getOrderStatus().equals(DELIVERED))
                 totalSpending += x.calculateTotal();
         }
         return totalSpending;
@@ -97,19 +96,19 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         return Membership.NORMAL;
     }
 
-    public String getMembership() {
+    public String getCustomerMembership() {
         return this.customerMembership;
     }
 
-    public String getName() {
+    public String getCustomerName() {
         return this.customerName;
     }
 
-    public String getID() {
+    public String getCustomerID() {
         return this.customerID;
     }
 
-    public void setID(String newID) {
+    public void setCustomerID(String newID) {
         this.customerID = newID;
     }
 }

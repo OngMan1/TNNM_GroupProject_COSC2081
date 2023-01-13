@@ -2,3 +2,7 @@
 001,TypeB
 002,TypeC
 003,TypeD
+004,TypeE
+005,World Cup
+006,Food
+007,Alcohol

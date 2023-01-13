@@ -1,14 +1,13 @@
 import java.util.ArrayList;
 
-// set the format for the ID
 interface IDFormat {
     String numbers = "%03d";
     String numbersRegex = "0*[0-9]{3}";
 }
-class Utilities {
 
+class Utilities {
     public static String IDFormatter(int currCount) {
-        return String.format("%03d", currCount);
+        return String.format(numbers, currCount);
     }
 
     public static boolean checkSearch(boolean[] all) {
@@ -44,6 +43,7 @@ class Utilities {
         }
         return false;
     }
+
     public static boolean isInRange(double value, double min, double max) {
         if (min < 0 || min >= max) {
             return false;
@@ -56,6 +56,16 @@ class Utilities {
             return false;
         }
         return isInRange(value, range[0], range[1]);
+    }
+
+    public static double getMembershipRate(String membershipType) {
+        if (membershipType.equals(SILVER))
+            return SILVER_RATE;
+        if (membershipType.equals(GOLD))
+            return GOLD_RATE;
+        if (membershipType.equals(PLATINUM))
+            return PLATINUM_RATE;
+        return 0;
     }
 
 }

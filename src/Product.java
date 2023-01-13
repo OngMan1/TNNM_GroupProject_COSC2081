@@ -10,16 +10,15 @@ interface ProductDetail {
 }
 
 class Product implements ProductDetail, AttributeFormat {
-    // private static final int P_ID = 0, P_Name = 1, P_Price = 2, P_Category = 3;
-    private String ProductID, ProductName;
-    private double ProductPrice;
-    private String ProductCategory;
+    private String productID, productName;
+    private double productPrice;
+    private String productCategoryID;
 
-    public Product(String productID, String productName, double productPrice, String productCategory) {
-        ProductID = productID;
-        ProductName = productName;
-        ProductPrice = productPrice;
-        ProductCategory = productCategory;
+    public Product(String productID, String productName, double productPrice, String productCategoryID) {
+        this.productID = productID;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productCategoryID = productCategoryID;
     }
 
     public Product(String[] parts) {
@@ -33,40 +32,40 @@ class Product implements ProductDetail, AttributeFormat {
     public String toString() {
         return String.format(
                 "(%s) %s [%.2f] - {%s}",
-                ProductID, ProductName, ProductPrice, ProductCategory);
+                productID, productName, productPrice, getProductCategoryName());
     }
 
     public String toCategory() {
         return String.format(
                 "{%s} (%s) %s [%.2f]",
-                ProductCategory, ProductID, ProductName, ProductPrice);
-    }
-
-    public static ArrayList<Product> searchProductByID(String productID) {
-        return Searcher.searchProduct(productID, null, null, null);
-    }
-
-    public static ArrayList<Product> searchProductByName(String productName) {
-        return Searcher.searchProduct(null, productName, null, null);
-    }
-
-    public static ArrayList<Product> searchProductByCategory(String productCategory) {
-        return Searcher.searchProduct(null, null, productCategory, null);
-    }
-
-    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
-        return Searcher.searchProduct(null, null, null, new double[]{min, max});
+                getProductCategoryName(), productID, productName, productPrice);
     }
 
     public static void browseProducts() {
         Utilities.printArrayList(Loader.loadProduct());
     }
-    public String getName() {
-        return this.ProductName;
+
+    public String getProductID() {
+        return this.productID;
     }
 
-    public String getCategory() {
-        return this.ProductCategory;
+    public Double getProductPrice() {
+        return this.productPrice;
+    }
+
+    public String getProductName() {
+        return this.productName;
+    }
+
+    public String getProductCategoryID() {
+        return this.productCategoryID;
+    }
+
+    public String getProductCategoryName() {
+        Category tmp = Searcher.searchCategory(this.productCategoryID, null);
+        if (tmp == null)
+            return "";
+        return tmp.getCategoryName();
     }
 
     static Comparator<Product> byID() {
@@ -74,8 +73,8 @@ class Product implements ProductDetail, AttributeFormat {
             @Override
             public int compare(Product p1, Product p2) {
                 return Integer.compare(
-                        Integer.parseInt(p1.getID()),
-                        Integer.parseInt(p2.getID()));
+                        Integer.parseInt(p1.getProductID()),
+                        Integer.parseInt(p2.getProductID()));
             }
         };
     }
@@ -84,7 +83,7 @@ class Product implements ProductDetail, AttributeFormat {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
-                return p1.getPrice().compareTo(p2.getPrice());
+                return p1.getProductPrice().compareTo(p2.getProductPrice());
             }
         };
     }
@@ -93,16 +92,25 @@ class Product implements ProductDetail, AttributeFormat {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
-                return p1.getName().compareTo(p2.getName());
+                return p1.getProductName().compareTo(p2.getProductName());
             }
         };
     }
 
-    static Comparator<Product> byCategory() {
+    static Comparator<Product> byCategoryName() {
         return new Comparator<Product>() {
             @Override
             public int compare(Product p1, Product p2) {
-                return p1.getCategory().compareTo(p2.getCategory());
+                return p1.getProductCategoryName().compareTo(p2.getProductCategoryName());
+            }
+        };
+    }
+
+    static Comparator<Product> byCategoryID() {
+        return new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                return p1.getProductCategoryID().compareTo(p2.getProductCategoryID());
             }
         };
     }
@@ -110,19 +118,31 @@ class Product implements ProductDetail, AttributeFormat {
     @Override
     public String[] getWriteFormat() {
         return new String[] {
-                ProductID,
-                ProductName,
-                String.valueOf(ProductPrice),
-                ProductCategory,
+                getProductID(),
+                getProductName(),
+                String.valueOf(getProductPrice()),
+                getProductCategoryID(),
         };
     }
 
-    public String getID() {
-        return this.ProductID;
+    public static ArrayList<Product> searchProductByID(String productID) {
+        return Searcher.searchProduct(productID, null, null, null, null);
     }
 
-    public Double getPrice() {
-        return this.ProductPrice;
+    public static ArrayList<Product> searchProductByName(String productName) {
+        return Searcher.searchProduct(null, productName, null, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
+        return Searcher.searchProduct(null, null, productCategoryID, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
+        return Searcher.searchProduct(null, null, null, productCategoryName, null);
+    }
+
+    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
+        return Searcher.searchProduct(null, null, null, null, new double[] { min, max });
     }
 
 }

@@ -1,6 +1,8 @@
-001,Dell XPS 17,5.5,Laptop
-002,Macbook Pro 15,8.5,Laptop
-003,Samsung Galaxy S22,4.5,Phone
-004,Iphone 13 PM,7.5,Phone
-005,Harman Kardon,3.5,Earbud
-006,Marshall,6,Headset
+001,Pepsi,20000,001
+002,Sprite,30000,002
+003,Pepper,7000000,003
+004,Fanta,4000000.0,004
+005,Messi,100000.0,005
+006,Burger,300000.0,006
+007,Fries,10000.0,006
+008,Vodka,6.9696969E7,007

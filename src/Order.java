@@ -22,16 +22,19 @@ interface OrderStatus {
     String DELIVERED = "delivered";
 }
 
-class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, AttributeFormat {
+interface DateFormat {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+}
+
+class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, AttributeFormat, DateFormat, Membership {
     private String orderID;
     private ArrayList<Product> orderProducts;
     private String orderStatus = null;
-    private String userName;
-    static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    private String orderUserName;
     private LocalDate orderDate = LocalDate.now();
 
     public Order(String userName, String orderID, ArrayList<Product> orderProducts, String orderStatus) {
-        this.userName = userName;
+        this.orderUserName = userName;
         this.orderID = orderID;
         this.orderProducts = orderProducts;
         this.orderStatus = orderStatus;
@@ -53,13 +56,51 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
 
     @Override
     public String toString() {
-        return getShortOrderInfo() + "\n" + getOrderProducts();
+        return getOrderInfo() + "\n" + getOrderProducts();
     }
 
-    public String getShortOrderInfo() {
-        return String.format(
+    public String getOrderInfo() {
+        String info = String.format(
                 "(%s) {%s} [%s] - %s === Total: [%.2f]",
-                getUsername(), getID(), getStatus(), getDate(), calculateTotal());
+                getOrderUsername(), getOrderID(), getOrderStatus(), getOrderDate().format(dtf), calculateTotal());
+        if (getOrderStatus().equals(DELIVERED)) {
+            return info + String.format("\n(%s) Discounted Total: %.2f", getOrderCustomer().getCustomerMembership(),
+                    calculateTotal() - getOrderDiscount());
+        }
+        return info + getOrderDiscountString();
+    }
+
+    public Customer getOrderCustomer() {
+        ArrayList<Customer> tmp = Searcher.searchCustomerByUsername(this.getOrderUsername());
+        if (tmp.size() != 1) {
+            System.out.println("Err: Invalid number of customers");
+            return null;
+        }
+        return tmp.get(0);
+    }
+
+    public Double getOrderDiscountRate() {
+        Customer orderCustomer = getOrderCustomer();
+        if (orderCustomer == null) {
+            System.out.println("Didn't find Customer with username" + this.getOrderUsername());
+            return null;
+        }
+
+        return Utilities.getMembershipRate(orderCustomer.getCustomerMembership());
+    }
+
+    public Double getOrderDiscountTotal() {
+        return calculateTotal() * (1 - getOrderDiscountRate());
+    }
+
+    public Double getOrderDiscount() {
+        return calculateTotal() * getOrderDiscountRate();
+    }
+
+    public String getOrderDiscountString() {
+        if (getOrderDiscountRate().equals(0.0))
+            return "";
+        return String.format("Discount total: %.2f", getOrderDiscountTotal());
     }
 
     public String getOrderProducts() {
@@ -69,67 +110,63 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
     private String[] OrderProductFormat(Product product) {
         String[] formatted = {
                 this.orderID,
-                product.getID()
+                product.getProductID()
         };
         return formatted;
     }
 
-    public ArrayList<String[]> OrderProductFormat() {
-        ArrayList<String[]> formatted = new ArrayList<>();
-        for (Product x : orderProducts) {
-            formatted.add(OrderProductFormat(x));
+    public boolean setOrderStatus(String status) {
+        if (this.orderStatus.equals(status)) {
+            System.out.println("Order is already " + this.orderStatus);
+            return false;
         }
-        return formatted;
-    }
 
-    public void setOrderStatus(Admin admin, String status) {
-        if (admin != null) {
-            if (this.orderStatus.equals(status)) {
-                System.out.println("Order is already " + this.orderStatus);
-                return;
-            }
-            if (this.orderStatus.equals(DELIVERED)) {
-                System.out.println("Order is already delivered");
-                return;
-            }
-            switch (status) {
-                case "DELIVERED":
-                    System.out.println("Order Delivered!");
-                    this.orderStatus = "delivered";
-                    return;
-                default:
-                    System.out.println("Err: Invalid status");
-                    return;
-            }
-        } else {
-            System.out.println("Err: Not Admin");
+        if (this.orderStatus.equals(DELIVERED)) {
+            System.out.println("Order is already delivered");
+            return false;
         }
-    }
 
-    public static ArrayList<Order> getOrderByCustUsername(String custUsername) {
-        ArrayList<Order> result = new ArrayList<>();
-        for (Order x : Loader.loadOrder()) {
-            if (x.userName.equals(custUsername)) {
-                result.add(x);
-            }
+        if (status.equals(DELIVERED)) {
+            System.out.println("Order Delivered!");
+            this.orderStatus = "delivered";
+            return true;
         }
-        return result;
+
+        System.out.println("Err: Invalid status");
+        return false;
     }
 
     public Double calculateTotal() {
         Double sum = 0.0;
         for (Product x : orderProducts) {
-            sum += x.getPrice();
+            sum += x.getProductPrice();
         }
         return sum;
     }
+
+    public String getOrderStatus() {
+        return this.orderStatus;
+    }
+
+    public String getOrderID() {
+        return this.orderID;
+    }
+
+    public String getOrderUsername() {
+        return this.orderUserName;
+    }
+
+    public LocalDate getOrderDate() {
+        return this.orderDate;
+    }
+
     @Override
     public String[] getWriteFormat() {
         return new String[] {
-                getUsername(),
-                getID(),
-                getStatus(),
-                getDate().format(dtf)
+                getOrderUsername(),
+                getOrderID(),
+                getOrderStatus(),
+                getOrderDate().format(dtf)
         };
     }
 
@@ -145,25 +182,13 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
         return new Comparator<Order>() {
             @Override
             public int compare(Order o1, Order o2) {
-                return o1.getDate().compareTo(o2.getDate());
+                return o1.getOrderDate().compareTo(o2.getOrderDate());
             }
         };
     }
 
-    public String getStatus() {
-        return this.orderStatus;
-    }
-
-    public String getID() {
-        return this.orderID;
-    }
-
-    public String getUsername() {
-        return this.userName;
-    }
-
-    public LocalDate getDate() {
-        return this.orderDate;
+    public void addOrderProducts(Product product) {
+        this.orderProducts.add(product);
     }
 
 }
