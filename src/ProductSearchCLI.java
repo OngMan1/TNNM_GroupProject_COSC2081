@@ -91,6 +91,7 @@ public class ProductSearchCLI implements CLI, ProductCLIIndex {
             } else {
                 Utilities.printArrayList(productFiltered);
             }
+            break;
         }
         return false;
 
