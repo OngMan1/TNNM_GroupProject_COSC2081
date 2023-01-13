@@ -1,5 +1,5 @@
 interface CategoryDetails {
-    String CATEGORY_DETAIL = "category_details.txt";
+    String CATEGORY_DETAIL = "src/category_details.txt";
     int ID = 0;
     int NAME = 1;
 }

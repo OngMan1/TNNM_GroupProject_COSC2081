@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 interface OrderInfo {
-    String ORDER_DETAILS = "order_details.txt";
+    String ORDER_DETAILS = "src/order_details.txt";
     int ORDER_USER = 0;
     int ID = 1;
     int STATUS = 2;
@@ -12,7 +12,7 @@ interface OrderInfo {
 }
 
 interface OrderProduct {
-    String ORDER_PRODUCT = "order_products.txt";
+    String ORDER_PRODUCT = "src/order_products.txt";
     int OR_ID = 0;
     int PR_ID = 1;
 }

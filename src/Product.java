@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 interface ProductDetail {
-    String PRODUCT_DETAILS = "products_detail.txt";
+    String PRODUCT_DETAILS = "src/items.txt";
 
     int ID = 0;
     int NAME = 1;

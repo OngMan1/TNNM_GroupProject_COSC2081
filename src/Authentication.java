@@ -11,8 +11,8 @@ interface LoginInfo {
 }
 
 interface SensitiveData {
-    String CUSTOMER_DETAILS = "user_details.txt";
-    String ADMIN_DETAILS = "admin_details.txt";
+    String CUSTOMER_DETAILS = "src/user.txt";
+    String ADMIN_DETAILS = "src/admin.txt";
 }
 
 class Authentication implements LoginType, SensitiveData, LoginInfo {

@@ -1,6 +1,6 @@
 
 interface Order_Totals {
-    String ORDER_TOTALS = "order_totals.txt";
+    String ORDER_TOTALS = "src/order_totals.txt";
     int ID = 0;
     int total = 1;
 }
