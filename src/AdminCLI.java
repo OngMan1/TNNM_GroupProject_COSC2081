@@ -1,4 +1,4 @@
-interface AdminIndex {
+interface AdminCLIIndex {
     String VIEW_ALL_PRODUCTS = "0";
     String VIEW_ALL_ORDERS = "1";
     String VIEW_ALL_CUSTOMERS = "2";
@@ -11,21 +11,29 @@ interface AdminIndex {
     String STATISTIC = "9";
 }
 
-public class AdminCLI implements CLI, AdminIndex {
+public class AdminCLI implements CLI, AdminCLIIndex {
     public boolean run() {
         boolean state = true;
         Authentication session = new Authentication();
         System.out.println("ADMIN LOGIN: ");
-        Admin currAdmin = session.Admin_Login();
+        System.out.println("DEBUG MODE");
+        String[] testing = {
+                "microporereckonings",
+                "dillymencalkshitherward"
+        };
+        Admin currAdmin = session.Admin_Login(testing);
+        // Admin sessAdmin = session.Admin_Login();
         while (state) {
             UserInput.clearConsole();
             Utilities.printStringBullet(getOptions());
             System.out.println("Enter an option: ");
             String command = UserInput.getInput();
             state = executeCommand(command, currAdmin);
-            System.out.println("Continue? (Y/N): ");
+            System.out.println("Continue as Admin? (Y/N): ");
             if (UserInput.getConfirmation("Y", "N")) {
                 state = true;
+            } else {
+                state = false;
             }
         }
         return state;
@@ -33,48 +41,50 @@ public class AdminCLI implements CLI, AdminIndex {
     }
 
     public boolean executeCommand(String command, Admin admin) {
-        if (admin != null) {
-            switch (command) {
-                case VIEW_ALL_PRODUCTS:
-                    Product.browseProducts();
-                    break;
-                case VIEW_ALL_ORDERS:
-                    System.out.println("Include products? (Y/N): ");
-                    boolean viewProduct = UserInput.getConfirmation("Y", "N");
-                    admin.viewAllOrders(viewProduct);
-                    break;
-                case VIEW_ALL_CUSTOMERS:
-                    System.out.println("Include user accounts? (Y/N): ");
-                    boolean viewAccount = UserInput.getConfirmation("Y", "N");
-                    admin.viewAllCustomers(viewAccount);
-                    break;
-                case ADD_PRODUCT:
-                    admin.addProduct();
-                    break;
-                case ADD_CATEGORY:
-                    admin.addCategory();
-                    break;
-                case EDIT_PRODUCT_PRICE:
-                    admin.editProductInfo();
-                    break;
-                case EDIT_ORDER_STATUS:
-                    admin.changeOrderStatus();
-                    break;
-                case VIEW_ORDERS_BY_CUSTOMER:
-                    admin.getOrdersByCustomer();
-                    break;
-                case VIEW_ORDERS_BY_DATE:
-                    admin.getOrdersByDate();
-                    break;
-                case STATISTIC:
+        if (command == null || admin == null) {
+            return false;
+        }
+        switch (command) {
+            case VIEW_ALL_PRODUCTS:
+                Product.browseProducts();
+                break;
+            case VIEW_ALL_ORDERS:
+                System.out.println("Include products? (Y/N): ");
+                boolean viewProduct = UserInput.getConfirmation("Y", "N");
+                admin.viewAllOrders(viewProduct);
+                break;
+            case VIEW_ALL_CUSTOMERS:
+                System.out.println("Include user accounts? (Y/N): ");
+                boolean viewAccount = UserInput.getConfirmation("Y", "N");
+                admin.viewAllCustomers(viewAccount);
+                break;
+            case ADD_PRODUCT:
+                admin.addProduct();
+                break;
+            case ADD_CATEGORY:
+                admin.addCategory();
+                break;
+            case EDIT_PRODUCT_PRICE:
+                admin.editProductInfo();
+                break;
+            case EDIT_ORDER_STATUS:
+                admin.changeOrderStatus();
+                break;
+            case VIEW_ORDERS_BY_CUSTOMER:
+                admin.getOrdersByCustomer();
+                break;
+            case VIEW_ORDERS_BY_DATE:
+                admin.getOrdersByDate();
+                break;
+            case STATISTIC:
+                StatisticCLI statSession = new StatisticCLI();
+                statSession.run(admin);
+            default:
+                System.out.println("Invalid option, Please enter a valid option");
+                break;
 
-                default:
-                    System.out.println("Invalid option, Please enter a valid option");
-                    break;
-            }
         }
         return false;
-
     }
 
     @Override

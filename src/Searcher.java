@@ -18,6 +18,7 @@ class Searcher {
             }
         }
         return res;
+
     }
 
     public static ArrayList<Customer> searchCustomerByUsername(String customerUsername) {
@@ -56,6 +57,42 @@ class Searcher {
         return result;
     }
 
+    public static ArrayList<Product> searchProductByID(String productID) {
+        return searchProduct(productID, null, null, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByName(String productName) {
+        return searchProduct(null, productName, null, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByNameOrID(String productName) {
+        if (!Utilities.containsPattern(IDFormat.numbersRegex, productName)) {
+            return searchProductByName(productName);
+        } else {
+            return searchProductByID(productName);
+        }
+    }
+
+    public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
+        return searchProduct(null, null, productCategoryID, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
+        return searchProduct(null, null, null, productCategoryName, null);
+    }
+
+    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
+        return searchProduct(null, null, null, null, new double[] { min, max });
+    }
+
+    public static ArrayList<Product> searchProductByCategory(String productCategoryName) {
+        if (!Utilities.containsPattern(IDFormat.numbersRegex, productCategoryName)) {
+            return searchProductByCategoryName(productCategoryName);
+        } else {
+            return searchProductByCategoryID(productCategoryName);
+        }
+    }
+
     public static Category searchCategory(String categoryID, String categoryName) {
         for (Category x : Loader.loadCategories()) {
             if ((categoryID != null && x.getCategoryID().equalsIgnoreCase(categoryID) ||
@@ -65,6 +102,7 @@ class Searcher {
         }
         return null;
     }
+
     public static Category searchCategoryByID(String categoryID) {
         return searchCategory(categoryID, null);
     }
@@ -87,41 +125,6 @@ class Searcher {
         return result;
     }
 
-    public static ArrayList<Product> searchProductByID(String productID) {
-        return searchProduct(productID, null, null, null, null);
-    }
-
-    public static ArrayList<Product> searchProductByName(String productName) {
-        return searchProduct(null, productName, null, null, null);
-    }
-    public static ArrayList<Product> searchProductByNameOrID(String productName) {
-        if (!Utilities.containsPattern(IDFormat.numbersRegex, productName)) {
-            return searchProductByName(productName);
-        } else {
-            return searchProductByID(productName);
-        }
-    }
-
-    public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
-        return searchProduct(null, null, productCategoryID, null, null);
-    }
-
-
-    public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
-        return searchProduct(null, null, null, productCategoryName, null);
-    }
-
-    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
-        return searchProduct(null, null, null, null, new double[] { min, max });
-    }
-    public static ArrayList<Product> searchProductByCategory(String productCategoryName) {
-        if (!Utilities.containsPattern(IDFormat.numbersRegex, productCategoryName)) {
-            return searchProductByCategoryName(productCategoryName);
-        } else {
-            return searchProductByCategoryID(productCategoryName);
-        }
-    }
-
     public static ArrayList<Order> searchOrderByID(String orderID) {
         return searchOrder(orderID, null, null, null);
     }
@@ -142,7 +145,7 @@ class Searcher {
         ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
         Utilities.printArrayList(allOrderTotals);
         for (OrderTotals x : allOrderTotals) {
-            System.out.println(x.getOrderID() + " " + orderID);
+            // System.out.println(x.getOrderID() + " " + orderID);
             if (x.getOrderID().equals(orderID)) {
                 return x;
             }

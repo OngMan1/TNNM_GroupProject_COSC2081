@@ -1,14 +1,15 @@
-interface MainIndex {
-    String LOG_IN_CUSTOMER = "0";
-    String LOG_IN_ADMIN = "1";
+interface MainCLIIndex {
+    String LOG_IN_ADMIN = "0";
+    String LOG_IN_CUSTOMER = "1";
     String CREATE_CUSTOMER_ACCOUNT = "2";
 }
 
-public class MainCLI implements CLI, MainIndex {
+public class MainCLI implements CLI, MainCLIIndex {
 
     public boolean run() {
         boolean state = true;
-        getWelcomeScreen();
+        Utilities.printStringArray(getWelcomeScreen());
+        UserInput.waitForKeyPress();
         while (state) {
             UserInput.clearConsole();
             System.out.println("MAIN SCREEN: ");
@@ -16,23 +17,28 @@ public class MainCLI implements CLI, MainIndex {
             System.out.println("Enter an option: ");
             String command = UserInput.getInput();
             state = executeCommand(command);
-            System.out.println("Continue? (Y/N): ");
+            System.out.println("Continue Main Screen? (Y/N): ");
             if (UserInput.getConfirmation("Y", "N")) {
                 state = true;
+            } else {
+                state = false;
             }
         }
         return false;
     }
 
     public boolean executeCommand(String command) {
+        if (command == null) {
+            return false;
+        }
         CLI session;
         switch (command) {
-            case LOG_IN_CUSTOMER:
-                session = new CustomerCLI();
-                session.run();
-                break;
             case LOG_IN_ADMIN:
                 session = new AdminCLI();
+                session.run();
+                break;
+            case LOG_IN_CUSTOMER:
+                session = new CustomerCLI();
                 session.run();
                 break;
             case CREATE_CUSTOMER_ACCOUNT:

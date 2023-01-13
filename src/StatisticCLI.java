@@ -1,4 +1,4 @@
-interface StatisticIndex {
+interface StatisticCLIIndex {
     String TOTAL_REVENUE = "0";
     String REVENUE_BY_DATE = "1";
     String PRODUCTS_BY_SALES = "2";
@@ -6,9 +6,10 @@ interface StatisticIndex {
     String LIST_MEMBERSHIPS = "4";
 }
 
-public class StatisticCLI implements CLI, StatisticIndex {
+public class StatisticCLI implements CLI, StatisticCLIIndex {
 
     public boolean run() {
+        System.out.println("No permission");
         return false;
     }
 
@@ -33,6 +34,9 @@ public class StatisticCLI implements CLI, StatisticIndex {
     }
 
     public boolean executeCommand(String command, Admin admin) {
+        if (command == null || admin == null) {
+            return false;
+        }
         switch (command) {
             case TOTAL_REVENUE:
                 System.out.println("Total revenue = " + admin.getTotalRevenue());

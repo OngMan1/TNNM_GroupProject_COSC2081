@@ -14,7 +14,7 @@ public class UserInput {
 
     public static boolean getConfirmation(String yes, String no) {
         String input = getInput();
-        if (input.isEmpty() || !input.equalsIgnoreCase(yes)) {
+        if (input == null || !input.equalsIgnoreCase(yes)) {
             return false;
         }
         return true;

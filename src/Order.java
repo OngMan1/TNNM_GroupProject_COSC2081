@@ -72,10 +72,6 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
 
             info += String.format("\nAfter discount: %.2f", afterDiscount);
         }
-        // } else {
-        // info += String.format("Discounted Total: %.2f",
-        // Searcher.searchOrderTotalFromOrderID(this.getOrderID()).getOrderTotals());
-        // }
         return info;
 
     }
