@@ -18,7 +18,6 @@ class Searcher {
             }
         }
         return res;
-
     }
 
     public static ArrayList<Customer> searchCustomerByUsername(String customerUsername) {
@@ -59,12 +58,19 @@ class Searcher {
 
     public static Category searchCategory(String categoryID, String categoryName) {
         for (Category x : Loader.loadCategories()) {
-            if ((categoryID != null && x.getCategoryID().equals(categoryID)) ||
-                    (categoryName != null && x.getCategoryName().equalsIgnoreCase(categoryName))) {
+            if ((categoryID != null && x.getCategoryID().equalsIgnoreCase(categoryID) ||
+                    (categoryName != null && x.getCategoryName().equalsIgnoreCase(categoryName)))) {
                 return x;
             }
         }
         return null;
+    }
+    public static Category searchCategoryByID(String categoryID) {
+        return searchCategory(categoryID, null);
+    }
+
+    public static Category searchCategoryByName(String categoryName) {
+        return searchCategory(null, categoryName);
     }
 
     public static ArrayList<Order> searchOrder(String orderID, String orderStatus, String orderUsername,
@@ -88,10 +94,18 @@ class Searcher {
     public static ArrayList<Product> searchProductByName(String productName) {
         return searchProduct(null, productName, null, null, null);
     }
+    public static ArrayList<Product> searchProductByNameOrID(String productName) {
+        if (!Utilities.containsPattern(IDFormat.numbersRegex, productName)) {
+            return searchProductByName(productName);
+        } else {
+            return searchProductByID(productName);
+        }
+    }
 
     public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
         return searchProduct(null, null, productCategoryID, null, null);
     }
+
 
     public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
         return searchProduct(null, null, null, productCategoryName, null);
@@ -99,6 +113,13 @@ class Searcher {
 
     public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
         return searchProduct(null, null, null, null, new double[] { min, max });
+    }
+    public static ArrayList<Product> searchProductByCategory(String productCategoryName) {
+        if (!Utilities.containsPattern(IDFormat.numbersRegex, productCategoryName)) {
+            return searchProductByCategoryName(productCategoryName);
+        } else {
+            return searchProductByCategoryID(productCategoryName);
+        }
     }
 
     public static ArrayList<Order> searchOrderByID(String orderID) {

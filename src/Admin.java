@@ -71,10 +71,6 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         }
     }
 
-    //public void setCustomerID(Customer customer, String newID) {
-        //customer.setCustomerID(newID);
-    //}
-
     public Product addProduct(String[] productInfo) {
         if (Loader.rawSearcher(PRODUCT_DETAILS, new String[] { null, productInfo[ProductDetail.NAME] }) == null) {
             ArrayList<String[]> allProducts = Loader.rawLoader(PRODUCT_DETAILS);
@@ -133,7 +129,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
 
     private Category getCategory(String productCategory) {
         Category category = null;
-        if (IDFormat.numbersRegex.matches(productCategory)) {
+        if (Utilities.containsPattern(IDFormat.numbersRegex, productCategory)) {
             category = Searcher.searchCategory(productCategory, null);
         } else {
             category = Searcher.searchCategory(null, productCategory);
@@ -171,5 +167,18 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
             System.out.println("Category already exist");
             return null;
         }
+    }
+    public Product editProductInfo(Product product, Double productPrice, String CategoryID) {
+        Double newPrice = productPrice;
+        String newCategoryID = CategoryID;
+        if (newPrice == null) {
+            newPrice = product.getProductPrice();
+        }
+        if (newCategoryID == null) {
+            newCategoryID = product.getProductCategoryID();
+        }
+        Product tmp = new Product(product.getProductID(), product.getProductName(), newPrice, newCategoryID);
+        Writer.replaceLine(PRODUCT_DETAILS, product.getProductID(), Writer.writeParser(tmp.getWriteFormat()));
+        return tmp;
     }
 }

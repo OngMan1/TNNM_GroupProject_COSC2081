@@ -65,7 +65,7 @@ class Product implements ProductDetail, AttributeFormat {
     public String getProductCategoryName() {
         Category tmp = Searcher.searchCategory(this.productCategoryID, null);
         if (tmp == null)
-            return "";
+            return "None";
         return tmp.getCategoryName();
     }
 
@@ -85,6 +85,14 @@ class Product implements ProductDetail, AttributeFormat {
             @Override
             public int compare(Product p1, Product p2) {
                 return p1.getProductPrice().compareTo(p2.getProductPrice());
+            }
+        };
+    }
+    static Comparator<Product> byPriceDescending() {
+        return new Comparator<Product>() {
+            @Override
+            public int compare(Product p1, Product p2) {
+                return -p1.getProductPrice().compareTo(p2.getProductPrice());
             }
         };
     }
@@ -146,12 +154,8 @@ class Product implements ProductDetail, AttributeFormat {
         return cart;
     }
 
-
     public static Product getProduct(String productID) {
         Product resProduct = null;
-        // System.out.println(productID + " " + IDFormat.numbersRegex + " " +
-        // "0*[0-9]{3}".matches(productID));
-        // IDFormat.numbersRegex.matches(productID)
         if (Utilities.containsPattern(IDFormat.numbersRegex, productID)) {
             ArrayList<Product> tmp = Searcher.searchProductByID(productID);
             if (tmp.size() == 1) {

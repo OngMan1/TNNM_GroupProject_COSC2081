@@ -62,4 +62,32 @@ class Writer implements Delimiter {
             e.printStackTrace();
         }
     }
+
+    public static void removeLine(String fileName, String lineToRemove) {
+        try {
+            // Create a BufferedReader to read the file
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            // Create a StringBuilder to store the new file contents
+            StringBuilder sb = new StringBuilder();
+            // Read the file line by line
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // If the line to remove is not the current line, add it to the new file
+                // contents
+                if (!line.startsWith(lineToRemove)) {
+                    sb.append(line).append("\n");
+                }
+            }
+            // Close the reader
+            reader.close();
+            // Convert the StringBuilder to a string
+            String newFileContent = sb.toString();
+            // Write the new file contents to the file
+            FileWriter fw = new FileWriter(fileName);
+            fw.write(newFileContent);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -37,5 +37,8 @@ class Category implements CategoryDetails, AttributeFormat {
                 getCategoryName()
         };
     }
+    public static void browseCategories() {
+        Utilities.printArrayList(Loader.loadCategories());
+    }
 
 }

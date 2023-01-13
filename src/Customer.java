@@ -185,5 +185,62 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
     public void addOrder(Order order) {
         this.customerOrder.add(order);
     }
+    public void searchProduct() {
+        System.out.println("Search products: ");
 
+        ArrayList<Product> productFiltered = new ArrayList<>();
+        while (true) {
+
+            System.out.println(
+                    "Options: \n[0]. By Name\n[1]. By Category\n[2]. By Price Range\n[3]. Clear filters\n[4]. View all products\n[5]. View all categories\n[6]. End");
+            String input = UserInput.getInput();
+            String query = null;
+            switch (input) {
+                case "0":
+                    System.out.println("Enter product name or ID");
+                    query = UserInput.getInput();
+                    productFiltered.addAll(Searcher.searchProductByNameOrID(query));
+                    break;
+                case "1":
+                    System.out.println("Enter category name or ID");
+                    query = UserInput.getInput();
+                    productFiltered.addAll(Searcher.searchProductByCategory(query));
+                    break;
+                case "2":
+                    System.out.println("Enter min: ");
+                    String min = UserInput.getInput();
+                    System.out.println("Enter max: ");
+                    String max = UserInput.getInput();
+                    double[] range = UserInput.getPriceRange(min, max);
+                    productFiltered.addAll(Searcher.searchProductByPriceRange(range[0], range[1]));
+                    System.out.println("Sort (LOW/HIGH): ");
+                    if (UserInput.getConfirmation("LOW", "HIGH")) {
+                        productFiltered.sort(Product.byPrice());
+                    } else {
+                        productFiltered.sort(Product.byPriceDescending());
+                    }
+                    break;
+                case "3":
+                    productFiltered.clear();
+                    break;
+                case "4":
+                    Product.browseProducts();
+                    break;
+                case "5":
+                    Category.browseCategories();
+                    break;
+                default:
+                    return;
+            }
+            System.out.println("Results: ");
+            if (productFiltered.size() == 0) {
+                System.out.println("No product found");
+            } else {
+                Utilities.printArrayList(productFiltered);
+            }
+            UserInput.waitForKeyPress();
+            UserInput.clearConsole();
+        }
+
+    }
 }
