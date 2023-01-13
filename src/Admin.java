@@ -60,6 +60,46 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         return order;
     }
 
+    public void changeOrderStatus() {
+        String orderID;
+        Order oldOrder;
+        while (true) {
+            System.out.println("Enter Order ID");
+            orderID = UserInput.getInput();
+            ArrayList<Order> orders = Searcher.searchOrderByID(orderID);
+            if (orders.size() == 1) {
+                oldOrder = orders.get(0);
+                break;
+            }
+            System.out.println("Couldn't find order with ID " + orderID + ". Try again? (Y/N): ");
+            if (!UserInput.getConfirmation("Y", "N")) {
+                return;
+            }
+        }
+        System.out.println(oldOrder);
+        System.out.println("Change to " + OrderStatus.DELIVERED + "? (Y/N): ");
+        if (UserInput.getConfirmation("Y", "N") && oldOrder.setOrderStatus(OrderStatus.DELIVERED)) {
+            System.out.println("New order: ");
+            System.out.println(oldOrder);
+            System.out.println("Confirm changes? (Y/N):");
+            if (UserInput.getConfirmation("Y", "N")) {
+                Writer.replaceLine(OrderInfo.ORDER_DETAILS,
+                        String.format("%s%s%s", oldOrder.getOrderUsername(), Delimiter.TEXT_DELIMITER,
+                                oldOrder.getOrderID()),
+                        Writer.writeParser(oldOrder.getWriteFormat()));
+
+                Writer.appendFile(ORDER_TOTALS, Writer
+                        .writeParser(
+                                (new OrderTotals(oldOrder.getOrderID(), oldOrder.getOrderDiscountTotal()))
+                                        .getWriteFormat()));
+                System.out.println("Order status changed!");
+                return;
+            }
+
+        }
+        System.out.println("Order status did not change");
+    }
+
     public void viewAllOrders(boolean withProductsInfo) {
         ArrayList<Order> curr = Loader.loadOrder();
 
@@ -74,31 +114,46 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
     }
 
     public Product addProduct(String[] productInfo) {
-        if (Loader.rawSearcher(PRODUCT_DETAILS, new String[] { null, productInfo[ProductDetail.NAME] }) == null) {
-            ArrayList<String[]> allProducts = Loader.rawLoader(PRODUCT_DETAILS);
-            int totalProductCount = allProducts.size();
-            String[] newProductInfo = {
-                    Utilities.IDFormatter(totalProductCount),
-                    productInfo[ProductDetail.NAME],
-                    productInfo[ProductDetail.PRICE],
-                    productInfo[ProductDetail.CATEGORY]
-            };
-            Writer.appendFile(PRODUCT_DETAILS, Writer.writeParser(newProductInfo));
-            Product newProduct = new Product(newProductInfo);
-            return newProduct;
-        } else {
-            return null;
-        }
+        ArrayList<String[]> allProducts = Loader.rawLoader(PRODUCT_DETAILS);
+        int totalProductCount = allProducts.size();
+        String[] newProductInfo = {
+                Utilities.IDFormatter(totalProductCount),
+                productInfo[ProductDetail.NAME],
+                productInfo[ProductDetail.PRICE],
+                productInfo[ProductDetail.CATEGORY]
+        };
+        Writer.appendFile(PRODUCT_DETAILS, Writer.writeParser(newProductInfo));
+        Product newProduct = new Product(newProductInfo);
+        return newProduct;
     }
 
     public void addProduct() {
         System.out.println("Adding new product");
+        String productName;
+        while (true) {
+            System.out.println("Enter Product Name: ");
+            productName = UserInput.getInput();
+            if (Loader.rawSearcher(PRODUCT_DETAILS, new String[] { null, productName }, false) == null) {
+                break;
+            }
+            System.out.println("Product already exists. Try again? (Y/N): ");
+            if (!UserInput.getConfirmation("Y", "N")) {
+                return;
+            }
+        }
 
-        System.out.println("Enter Product Name: ");
-        String productName = UserInput.getInput();
-
-        System.out.println("Enter Product Price: ");
-        double productPrice = Double.parseDouble(UserInput.getInput());
+        Double productPrice;
+        while (true) {
+            System.out.println("Enter Product Price: ");
+            productPrice = UserInput.getDoubleFromInput();
+            if (productPrice != null) {
+                break;
+            }
+            System.out.println("Invalid Price. Try again? (Y/N): ");
+            if (!UserInput.getConfirmation("Y", "N")) {
+                return;
+            }
+        }
 
         System.out.println("Enter Product Category ID or Name: ");
         String productCategory = UserInput.getInput();
@@ -141,19 +196,15 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
     }
 
     public Category addCategory(String categoryName) {
-        if (Loader.rawSearcher(CATEGORY_DETAIL, new String[] { null, categoryName }) == null) {
-            ArrayList<String[]> allCategory = Loader.rawLoader(CATEGORY_DETAIL);
-            int totalCategoriesCount = allCategory.size();
-            String[] newCategoryInfo = {
-                    Utilities.IDFormatter(totalCategoriesCount),
-                    categoryName
-            };
-            Writer.appendFile(CATEGORY_DETAIL, Writer.writeParser(newCategoryInfo));
-            Category newCategory = new Category(newCategoryInfo);
-            return newCategory;
-        } else {
-            return null;
-        }
+        ArrayList<String[]> allCategory = Loader.rawLoader(CATEGORY_DETAIL);
+        int totalCategoriesCount = allCategory.size();
+        String[] newCategoryInfo = {
+                Utilities.IDFormatter(totalCategoriesCount),
+                categoryName
+        };
+        Writer.appendFile(CATEGORY_DETAIL, Writer.writeParser(newCategoryInfo));
+        Category newCategory = new Category(newCategoryInfo);
+        return newCategory;
     }
 
     public Category addCategory() {
@@ -182,8 +233,49 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
             newCategoryID = product.getProductCategoryID();
         }
         Product tmp = new Product(product.getProductID(), product.getProductName(), newPrice, newCategoryID);
-        Writer.replaceLine(PRODUCT_DETAILS, product.getProductID(), Writer.writeParser(tmp.getWriteFormat()));
         return tmp;
+    }
+
+    public void editProductInfo() {
+        Product productEdit;
+        while (true) {
+            System.out.println("Enter Product ID or Name:");
+            String productID = UserInput.getInput();
+            ArrayList<Product> tmp = Searcher.searchProductByNameOrID(productID);
+            if (tmp.size() == 1) {
+                productEdit = tmp.get(0);
+                break;
+            }
+            System.out.println("Product does not exists. Try again? (Y/N): ");
+            if (!UserInput.getConfirmation("Y", "N")) {
+                return;
+            }
+        }
+        Double productPrice;
+        while (true) {
+            System.out.println("Enter Product Price: ");
+            productPrice = UserInput.getDoubleFromInput();
+            if (productPrice != null) {
+                break;
+            }
+            System.out.println("Invalid Price. Try again? (Y/N): ");
+            if (!UserInput.getConfirmation("Y", "N")) {
+                return;
+            }
+        }
+        Product productNew = editProductInfo(productEdit, productPrice, productEdit.getProductCategoryID());
+        System.out.println("Old Product info: ");
+        System.out.println(productEdit);
+        System.out.println("New Product info: ");
+        System.out.println(productNew);
+        System.out.println("Confirm changes? (Y/N):");
+        if (UserInput.getConfirmation("Y", "N")) {
+            Writer.replaceLine(PRODUCT_DETAILS, productNew.getProductID(),
+                    Writer.writeParser(productNew.getWriteFormat()));
+            return;
+        }
+        System.out.println("Product info not changed");
+
     }
 
     public double getTotalRevenue() {
@@ -267,7 +359,17 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
 
     }
 
-    public int numberOfMembershipType() {
+    public void getOrdersByDate() {
+        ArrayList<Order> tmp;
+        System.out.println("Enter date (" + DateFormat.dateFormat + ")");
+        String date = UserInput.getInput();
+        tmp = Searcher.searchOrderByDate(date);
+        for (Order x : tmp) {
+            System.out.println(x);
+        }
+    }
+
+    public void numberOfMembershipType() {
         Field[] membershipTypes = Membership.class.getDeclaredFields();
         ArrayList<String> allMembershipTypes = new ArrayList<>();
         for (Field x : membershipTypes) {
@@ -275,8 +377,28 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
                 allMembershipTypes.add(x.getName());
             }
         }
-        Utilities.printArrayList(allMembershipTypes);
-        return allMembershipTypes.size();
+        Utilities.printArrayBullet(allMembershipTypes);
+        System.out.println("There are " + allMembershipTypes.size() + " types of membership");
+    }
+
+    public void getOrdersByCustomer() {
+        ArrayList<Customer> tmp;
+        System.out.println("Search by Username or Name? (USER/NAME): ");
+        if (UserInput.getConfirmation("USER", "NAME")) {
+            System.out.println("Enter Username: ");
+            String username = UserInput.getInput();
+            tmp = Searcher.searchCustomerByUsername(username);
+        } else {
+            System.out.println("Enter Name: ");
+            String name = UserInput.getInput();
+            tmp = Searcher.searchCustomerByName(name);
+        }
+        for (Customer x : tmp) {
+            System.out.println(x.getCustomerInfo());
+            for (Order y : x.getOrders()) {
+                System.out.println(y);
+            }
+        }
     }
 
     private class CustomerSpending {

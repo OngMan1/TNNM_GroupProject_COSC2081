@@ -40,8 +40,8 @@ public class Test implements OrderStatus {
         };
         Admin sessAdmin = session.Admin_Login(testing);
         System.out.println(sessAdmin);
-        System.out.println(sessAdmin.numberOfMembershipType());
-        sessAdmin.sortCustomerBySpending(true);
+        // System.out.println(sessAdmin.numberOfMembershipType());
+        // sessAdmin.sortCustomerBySpending(true);
         // sessAdmin.sortProductBySales(true);
 
         // System.out.println(Searcher.searchOrderByID("001"));
@@ -51,7 +51,13 @@ public class Test implements OrderStatus {
         // System.out.println(Searcher.searchOrderTotalFromOrderID("001"));
         // System.out.println(Searcher.searchOrderByID("001"));
         // Product.browseProducts();
-        // System.out.println(sessAdmin.editProductInfo(Searcher.searchProductByName("Messi").get(0),
-        // 0.0, null));
+        // System.out.println();
+        // System.out.println(sessAdmin.editProductInfo(Searcher.searchProductByName("Coke").get(0),
+        // 9999999.0, null));
+        // Product.browseProducts();
+        // sessAdmin.addProduct();
+        // sessAdmin.addProduct(new String[] {
+        // null, "KFC", "12345", "007"
+        // });
     }
 }

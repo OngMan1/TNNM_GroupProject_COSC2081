@@ -19,6 +19,7 @@ public class UserInput {
         }
         return true;
     }
+
     public static double[] getPriceRange(String min, String max) {
         try {
             Double realMin = Double.parseDouble(min);
@@ -48,5 +49,14 @@ public class UserInput {
     public static void waitForKeyPress() {
         System.out.println("Press any key to continue...");
         getInput();
+    }
+
+    public static Double getDoubleFromInput() {
+        try {
+            Double thing = Double.parseDouble(getInput());
+            return thing;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

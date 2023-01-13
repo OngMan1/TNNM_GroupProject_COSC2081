@@ -23,7 +23,8 @@ interface OrderStatus {
 }
 
 interface DateFormat {
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    String dateFormat = "yyyy/MM/dd";
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateFormat);
 }
 
 class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, AttributeFormat, DateFormat, Membership {

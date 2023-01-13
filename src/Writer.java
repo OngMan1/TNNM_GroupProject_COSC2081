@@ -14,13 +14,21 @@ class Writer implements Delimiter {
 
     public static void appendFile(String filename, String content) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
-            File file = new File(filename);
-            if (file.length() == 0) {
-                writer.append(content);
-            } else {
-                writer.append("\n" + content);
+            content = content.strip();
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            String lastLine = "";
+            while ((line = reader.readLine()) != null) {
+                lastLine = line;
             }
+            reader.close();
+
+            if (!lastLine.isEmpty() && lastLine.charAt(lastLine.length() - 1) != '\n') {
+                content = "\n" + content;
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+            writer.append(content);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

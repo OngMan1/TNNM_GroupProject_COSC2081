@@ -9,7 +9,8 @@ interface Delimiter {
     String TEXT_DELIMITER = ",";
 }
 
-class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails, OrderProduct, OrderInfo, Order_Totals {
+class Loader
+        implements Delimiter, SensitiveData, ProductDetail, CategoryDetails, OrderProduct, OrderInfo, Order_Totals {
     public static String[] readParser(String content) {
         String[] parts = content.split(TEXT_DELIMITER);
         return parts;
@@ -23,7 +24,7 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
             if (!file.exists()) {
                 file.createNewFile();
             }
-            Writer.removeEmptyLines(file_name);
+            // Writer.removeEmptyLines(file_name);
             reader = new BufferedReader(new FileReader(file_name));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -52,9 +53,11 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
             for (String[] x : loaded) {
                 allCustomers.add(new Customer(x));
             }
-    }
+        }
+
         return allCustomers;
-}
+    }
+
     public static ArrayList<Product> loadProduct() {
         ArrayList<String[]> loaded = rawLoader(PRODUCT_DETAILS);
         ArrayList<Product> allProducts = new ArrayList<>();
@@ -63,6 +66,7 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
                 allProducts.add(new Product(x));
             }
         }
+
         return allProducts;
     }
 
@@ -74,6 +78,7 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
                 allCategory.add(new Category(x));
             }
         }
+
         return allCategory;
     }
 
@@ -88,6 +93,7 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
                 }
             }
         }
+
         Collections.sort(allProducts, Product.byID());
         return allProducts;
     }
@@ -96,13 +102,12 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
         ArrayList<String[]> loaded = rawLoader(ORDER_DETAILS);
         ArrayList<Order> allOrders = new ArrayList<>();
         if (loaded.size() != 0) {
-            if (loaded.size() != 0) {
-                for (String[] x : loaded) {
-                    allOrders.add(new Order(x));
-                }
+            for (String[] x : loaded) {
+                allOrders.add(new Order(x));
             }
         }
-            return allOrders;
+
+        return allOrders;
     }
 
     public static ArrayList<OrderTotals> loadOrderTotals() {
@@ -113,10 +118,15 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
                 allOrders.add(new OrderTotals(x));
             }
         }
+
         return allOrders;
     }
 
     public static String[] rawSearcher(String file_name, String[] searchInput) {
+        return rawSearcher(file_name, searchInput, true);
+    }
+
+    public static String[] rawSearcher(String file_name, String[] searchInput, boolean matchCase) {
         BufferedReader reader = null;
 
         try {
@@ -130,14 +140,25 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
             while ((line = reader.readLine()) != null) {
                 boolean[] allSearch = new boolean[searchInput.length];
                 String[] parts = Loader.readParser(line);
-                for (int i = 0; i < searchInput.length; i++) {
-                    if (parts[i] == null) {
-                        continue;
-                    }
-                    if (parts[i].equals(searchInput[i])) {
+                if (matchCase) {
+                    for (int i = 0; i < searchInput.length; i++) {
                         allSearch[i] = true;
-                    } else {
-                        break;
+                        if (searchInput[i] == null) {
+                            continue;
+                        }
+                        if (!searchInput[i].startsWith(parts[i])) {
+                            allSearch[i] = false;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < searchInput.length; i++) {
+                        allSearch[i] = true;
+                        if (searchInput[i] == null) {
+                            continue;
+                        }
+                        if (!searchInput[i].toLowerCase().startsWith(parts[i].toLowerCase())) {
+                            allSearch[i] = false;
+                        }
                     }
                 }
                 if (Utilities.checkSearch(allSearch)) {

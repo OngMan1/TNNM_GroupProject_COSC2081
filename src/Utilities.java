@@ -36,6 +36,26 @@ class Utilities implements IDFormat, Membership {
         return allCurr;
     }
 
+    public static void printStringArray(String[] list) {
+        for (String x : list) {
+            System.out.println(x);
+        }
+    }
+
+    public static void printStringBullet(String[] list) {
+        int i = 0;
+        for (String x : list) {
+            System.out.println(String.format("[%d] %s", i++, x));
+        }
+    }
+
+    public static <E> void printArrayBullet(ArrayList<E> curr) {
+        int i = 0;
+        for (E x : curr) {
+            System.out.println(String.format("[%d] %s", i++, x));
+        }
+    }
+
     public static <E> void addToArrayList(ArrayList<E> to, E from) {
         to.add(from);
     }
