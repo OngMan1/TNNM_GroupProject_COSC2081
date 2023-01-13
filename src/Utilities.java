@@ -7,7 +7,7 @@ interface IDFormat {
     String numbersRegex = "0*[0-9]{3}";
 }
 
-class Utilities {
+class Utilities implements IDFormat, Membership {
     public static String IDFormatter(int currCount) {
         return String.format(numbers, currCount);
     }

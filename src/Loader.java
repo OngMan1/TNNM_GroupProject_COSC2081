@@ -100,9 +100,8 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
                     allOrders.add(new Order(x));
                 }
             }
-
-            return allOrders;
         }
+            return allOrders;
     }
 
     public static ArrayList<OrderTotals> loadOrderTotals() {
@@ -112,7 +111,6 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
             for (String[] x : loaded) {
                 allOrders.add(new OrderTotals(x));
             }
-            allOrders.add(new Order(x));
         }
         return allOrders;
     }
