@@ -1,2 +1,4 @@
 glancedkryokonite,000,delivered,2023/01/10
 glancedkryokonite,001,delivered,2023/01/10
+glancedkryokonite,002,delivered,2023/01/10
+glancedkryokonite,003,placed,2023/01/10

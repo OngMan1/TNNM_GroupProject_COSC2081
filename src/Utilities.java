@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,10 +79,18 @@ class Utilities implements IDFormat, Membership {
         return allOrderID;
     }
 
+    // Source: https://stackoverflow.com/a/8923446
+
     public static boolean containsPattern(String regex, String input) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.find();
+    }
+
+// Source: https://stackoverflow.com/a/2459753
+
+    public static <E> int countOccurence(ArrayList<E> list, E thing) {
+        return Collections.frequency(list, thing);
     }
 
 }

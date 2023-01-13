@@ -23,7 +23,7 @@ interface Membership {
     String PLATINUM = "PLATINUM";
 }
 
-class Customer extends User implements LoginInfo, UserInfo, Membership, OrderStatus {
+class Customer extends User implements LoginInfo, UserInfo, OrderStatus {
     private String customerName;
     private String customerID;
     private ArrayList<Order> customerOrder = new ArrayList<>();
@@ -126,7 +126,7 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
     }
 
     public void updateInfo(String newUsername, String newPassword, String newName) {
-        String oldUsername = getUsername(), oldPassword = getPassword(), oldName = getCustomerName();
+        String oldUsername = getUsername(), oldPassword = getPassword();
         if (newUsername != null) {
             if (!setCustomerUsername(newUsername)) {
                 System.out.println("Username did not change");

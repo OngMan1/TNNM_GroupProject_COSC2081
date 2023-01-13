@@ -23,6 +23,7 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
             if (!file.exists()) {
                 file.createNewFile();
             }
+            Writer.removeEmptyLines(file_name);
             reader = new BufferedReader(new FileReader(file_name));
             String line;
             while ((line = reader.readLine()) != null) {

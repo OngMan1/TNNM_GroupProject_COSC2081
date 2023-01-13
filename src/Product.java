@@ -1,14 +1,20 @@
+
+// import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-
 interface ProductDetail {
     String PRODUCT_DETAILS = "products_detail.txt";
+
     int ID = 0;
     int NAME = 1;
     int PRICE = 2;
     int CATEGORY = 3;
 }
+
+// interface ProductPriceFormat {
+// DecimalFormat df = new DecimalFormat("#.00");
+// }
 
 class Product implements ProductDetail, AttributeFormat {
     private String productID, productName;
@@ -88,6 +94,7 @@ class Product implements ProductDetail, AttributeFormat {
             }
         };
     }
+
     static Comparator<Product> byPriceDescending() {
         return new Comparator<Product>() {
             @Override
@@ -150,6 +157,7 @@ class Product implements ProductDetail, AttributeFormat {
             } else {
                 cart.add(tmpProduct);
             }
+
         }
         return cart;
     }
@@ -169,6 +177,21 @@ class Product implements ProductDetail, AttributeFormat {
         }
         System.out.println(resProduct);
         return resProduct;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Product e;
+        if (!(o instanceof Product)) {
+            return false;
+        } else {
+            e = (Product) o;
+            if (this.getProductID().equals(e.getProductID()) &&
+                    this.getProductName().equals(e.getProductName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

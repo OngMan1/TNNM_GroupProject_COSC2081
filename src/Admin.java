@@ -1,4 +1,6 @@
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, CategoryDetails, IDFormat, Order_Totals {
 
@@ -129,6 +131,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
 
     private Category getCategory(String productCategory) {
         Category category = null;
+
         if (Utilities.containsPattern(IDFormat.numbersRegex, productCategory)) {
             category = Searcher.searchCategory(productCategory, null);
         } else {
@@ -168,6 +171,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
             return null;
         }
     }
+
     public Product editProductInfo(Product product, Double productPrice, String CategoryID) {
         Double newPrice = productPrice;
         String newCategoryID = CategoryID;
@@ -181,4 +185,151 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         Writer.replaceLine(PRODUCT_DETAILS, product.getProductID(), Writer.writeParser(tmp.getWriteFormat()));
         return tmp;
     }
+
+    public double getTotalRevenue() {
+        ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
+        double totalRevenue = 0;
+        for (OrderTotals x : allOrderTotals) {
+            totalRevenue += x.getOrderTotals();
+        }
+        return totalRevenue;
+    }
+
+    public double getRevenueOnDay(String date) {
+        ArrayList<Order> allOrderOnDate = Searcher.searchOrderByDate(date);
+        double totalRevenue = 0;
+        for (Order x : allOrderOnDate) {
+            OrderTotals tmp = Searcher.searchOrderTotalFromOrderID(x.getOrderID());
+            if (tmp != null) {
+                totalRevenue += tmp.getOrderTotals();
+            }
+        }
+        return totalRevenue;
+    }
+
+    private class ProductSalePair {
+        Product product;
+        int sale;
+
+        public ProductSalePair(Product product, int sale) {
+            this.product = product;
+            this.sale = sale;
+        }
+
+        public String toString() {
+            return String.format("(%s) %s:\t%s", product.getProductID(), product.getProductName(), sale);
+        }
+
+        static Comparator<ProductSalePair> bySales() {
+            return new Comparator<ProductSalePair>() {
+                @Override
+                public int compare(ProductSalePair p1, ProductSalePair p2) {
+                    return p1.sale - p2.sale;
+                }
+            };
+        }
+
+        static Comparator<ProductSalePair> bySalesDescending() {
+            return new Comparator<ProductSalePair>() {
+                @Override
+                public int compare(ProductSalePair p1, ProductSalePair p2) {
+                    return p2.sale - p1.sale;
+                }
+            };
+        }
+
+    }
+
+    public void sortProductBySales(boolean isDescending) {
+        ArrayList<Product> allProducts = Loader.loadProduct();
+        ArrayList<Product> allProductFromOrder = new ArrayList<>();
+        ArrayList<Order> allOrders = Loader.loadOrder();
+        for (Order x : allOrders) {
+            if (x.getOrderStatus().equals(OrderStatus.DELIVERED)) {
+                for (Product y : x.getOrderProducts()) {
+                    allProductFromOrder.add(y);
+                }
+            }
+        }
+        ArrayList<ProductSalePair> productSales = new ArrayList<>();
+        for (Product x : allProducts) {
+            productSales.add(new ProductSalePair(x, Utilities.countOccurence(allProductFromOrder, x)));
+        }
+        if (isDescending) {
+            productSales.sort(ProductSalePair.bySalesDescending());
+        } else {
+            productSales.sort(ProductSalePair.bySales());
+        }
+        System.out.println("ID    Name\tSales");
+        for (ProductSalePair x : productSales) {
+            System.out.println(x);
+        }
+
+    }
+
+    public int numberOfMembershipType() {
+        Field[] membershipTypes = Membership.class.getDeclaredFields();
+        ArrayList<String> allMembershipTypes = new ArrayList<>();
+        for (Field x : membershipTypes) {
+            if (x.getType() == String.class) {
+                allMembershipTypes.add(x.getName());
+            }
+        }
+        Utilities.printArrayList(allMembershipTypes);
+        return allMembershipTypes.size();
+    }
+
+    private class CustomerSpending {
+        Customer customer;
+        Double spending;
+
+        public CustomerSpending(Customer customer, double spending) {
+            this.customer = customer;
+            this.spending = spending;
+        }
+
+        public String toString() {
+            return String.format("(%s) %-15s\t%-10.2f", customer.getCustomerID(), customer.getCustomerName(), spending,
+                    customer.getCustomerMembership());
+        }
+
+        static Comparator<CustomerSpending> bySpending() {
+            return new Comparator<CustomerSpending>() {
+                @Override
+                public int compare(CustomerSpending p1, CustomerSpending p2) {
+                    return p1.spending.compareTo(p2.spending);
+                }
+            };
+        }
+
+        static Comparator<CustomerSpending> bySpendingDescending() {
+            return new Comparator<CustomerSpending>() {
+                @Override
+                public int compare(CustomerSpending p1, CustomerSpending p2) {
+                    return p2.spending.compareTo(p1.spending);
+                }
+            };
+        }
+
+    }
+
+    public void sortCustomerBySpending(boolean isDescending) {
+        ArrayList<Customer> allCustomers = Loader.loadCustomers();
+        ArrayList<CustomerSpending> allSpending = new ArrayList<>();
+        for (Customer x : allCustomers) {
+            allSpending.add(new CustomerSpending(x, x.getCustomerSpending()));
+        }
+
+        if (isDescending) {
+            allSpending.sort(CustomerSpending.bySpendingDescending());
+        } else {
+            allSpending.sort(CustomerSpending.bySpending());
+        }
+        System.out.printf("ID    Name%-14sSpending\n", " ");
+        for (CustomerSpending x : allSpending) {
+            System.out.println(x);
+        }
+
+    }
+
 }

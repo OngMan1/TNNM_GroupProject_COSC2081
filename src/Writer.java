@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 class Writer implements Delimiter {
     public static String writeParser(String[] content) {
@@ -88,6 +90,30 @@ class Writer implements Delimiter {
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void removeEmptyLines(String filePath) {
+        try {
+            File file = new File(filePath);
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    lines.add(line);
+                }
+            }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            for (String nonEmptyLine : lines) {
+                writer.write(nonEmptyLine);
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading/writing the file: " + e.getMessage());
         }
     }
 }

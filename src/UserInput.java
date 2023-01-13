@@ -14,10 +14,10 @@ public class UserInput {
 
     public static boolean getConfirmation(String yes, String no) {
         String input = getInput();
-        if (input.equalsIgnoreCase(yes)) {
-            return true;
+        if (input.isEmpty() || !input.equalsIgnoreCase(yes)) {
+            return false;
         }
-        return false;
+        return true;
     }
     public static double[] getPriceRange(String min, String max) {
         try {
