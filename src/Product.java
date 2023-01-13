@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Comparator;
 
+
 interface ProductDetail {
     String PRODUCT_DETAILS = "products_detail.txt";
     int ID = 0;
@@ -125,24 +126,45 @@ class Product implements ProductDetail, AttributeFormat {
         };
     }
 
-    public static ArrayList<Product> searchProductByID(String productID) {
-        return Searcher.searchProduct(productID, null, null, null, null);
+    public static ArrayList<Product> addToCart() {
+        ArrayList<Product> cart = new ArrayList<>();
+        while (true) {
+            System.out.print("(Cart: " + cart.size() + ") ");
+            System.out.println("Enter ProductID or ProductName (Leave empty to stop): ");
+            String input = UserInput.getInput();
+            if (input == null) {
+                break;
+            }
+            Product tmpProduct = getProduct(input);
+            if (tmpProduct == null) {
+                System.out.println("Product is not found.");
+                continue;
+            } else {
+                cart.add(tmpProduct);
+            }
+        }
+        return cart;
     }
 
-    public static ArrayList<Product> searchProductByName(String productName) {
-        return Searcher.searchProduct(null, productName, null, null, null);
-    }
 
-    public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
-        return Searcher.searchProduct(null, null, productCategoryID, null, null);
-    }
-
-    public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
-        return Searcher.searchProduct(null, null, null, productCategoryName, null);
-    }
-
-    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
-        return Searcher.searchProduct(null, null, null, null, new double[] { min, max });
+    public static Product getProduct(String productID) {
+        Product resProduct = null;
+        // System.out.println(productID + " " + IDFormat.numbersRegex + " " +
+        // "0*[0-9]{3}".matches(productID));
+        // IDFormat.numbersRegex.matches(productID)
+        if (Utilities.containsPattern(IDFormat.numbersRegex, productID)) {
+            ArrayList<Product> tmp = Searcher.searchProductByID(productID);
+            if (tmp.size() == 1) {
+                resProduct = tmp.get(0);
+            }
+        } else {
+            ArrayList<Product> tmp = Searcher.searchProductByName(productID);
+            if (tmp.size() == 1) {
+                resProduct = tmp.get(0);
+            }
+        }
+        System.out.println(resProduct);
+        return resProduct;
     }
 
 }

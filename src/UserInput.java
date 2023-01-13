@@ -5,7 +5,10 @@ public class UserInput {
 
     public static String getInput() {
         String input = sc.nextLine();
-        return input;
+        if (input.isBlank()) {
+            return null;
+        }
+        return input.strip();
     }
 
     public static boolean getConfirmation(String yes, String no) {

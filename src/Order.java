@@ -56,14 +56,25 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
 
     @Override
     public String toString() {
-        return getOrderInfo() + "\n" + getOrderProducts();
+        return getOrderInfo() + "\n" + Utilities.arrayListToString(getOrderProducts());
     }
 
     public String getOrderInfo() {
         String info = String.format(
-                "(%s) {%s} [%s] - %s === Total: [%.2f]\n(%s) Discounted Total: %.2f",
-                getOrderUsername(), getOrderID(), getOrderStatus(), getOrderDate().format(dtf), calculateTotal(),
-                getOrderCustomer().getCustomerMembership(), calculateTotal() - getOrderDiscount());
+                "(%s) {%s} [%s] - %s === Total: [%.2f]",
+                getOrderUsername(), getOrderID(), getOrderStatus(), getOrderDate().format(dtf), calculateTotal());
+        if (getOrderStatus() == OrderStatus.PLACED) {
+            info += String.format("\n(%s) Discounted Total: %.2f",
+                    getOrderCustomer().getCustomerMembership(), calculateTotal() - getOrderDiscount());
+        } else {
+            Double afterDiscount = Searcher.searchOrderTotalFromOrderID(this.getOrderID()).getOrderTotals();
+
+            info += String.format("\nAfter discount: %.2f", afterDiscount);
+        }
+        // } else {
+        // info += String.format("Discounted Total: %.2f",
+        // Searcher.searchOrderTotalFromOrderID(this.getOrderID()).getOrderTotals());
+        // }
         return info;
 
     }
@@ -101,8 +112,8 @@ class Order implements OrderInfo, OrderStatus, ProductDetail, OrderProduct, Attr
         return String.format("Discount total: %.2f", getOrderDiscountTotal());
     }
 
-    public String getOrderProducts() {
-        return Utilities.arrayListToString(orderProducts);
+    public ArrayList<Product> getOrderProducts() {
+        return orderProducts;
     }
 
     private String[] OrderProductFormat(Product product) {

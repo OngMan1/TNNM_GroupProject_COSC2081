@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 interface IDFormat {
     String numbers = "%03d";
@@ -66,6 +68,20 @@ class Utilities {
         if (membershipType.equals(PLATINUM))
             return PLATINUM_RATE;
         return 0;
+    }
+
+    public static ArrayList<String> getAllOrderIDs(ArrayList<Order> orders) {
+        ArrayList<String> allOrderID = new ArrayList<>();
+        for (Order x : orders) {
+            allOrderID.add(x.getOrderID());
+        }
+        return allOrderID;
+    }
+
+    public static boolean containsPattern(String regex, String input) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
     }
 
 }

@@ -71,9 +71,9 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         }
     }
 
-    public void setCustomerID(Customer customer, String newID) {
-        customer.setCustomerID(newID);
-    }
+    //public void setCustomerID(Customer customer, String newID) {
+        //customer.setCustomerID(newID);
+    //}
 
     public Product addProduct(String[] productInfo) {
         if (Loader.rawSearcher(PRODUCT_DETAILS, new String[] { null, productInfo[ProductDetail.NAME] }) == null) {

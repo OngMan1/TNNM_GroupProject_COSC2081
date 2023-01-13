@@ -9,7 +9,7 @@ class Searcher {
         for (Customer x : curr) {
             if ((customerUsername != null && x.getUsername().equals(customerUsername)) ||
                     (customerID != null && x.getCustomerID().equals(customerID)) ||
-                    (customerName != null && x.getCustomerName().equals(customerName)) ||
+                    (customerName != null && x.getCustomerName().equalsIgnoreCase(customerName)) ||
                     (customerSpendingRange != null
                             && Utilities.isInRange(x.getCustomerSpending(), customerSpendingRange))
                     ||
@@ -45,10 +45,10 @@ class Searcher {
                                                    String categoryName, double[] priceRange) {
         ArrayList<Product> result = new ArrayList<>();
         for (Product x : Loader.loadProduct()) {
-            if ((productID != null && x.getProductID().equals(productID)) ||
-                    (productName != null && x.getProductName().equals(productName)) ||
-                    (categoryID != null && x.getProductCategoryID().equals(categoryID)) ||
-                    (categoryName != null && x.getProductCategoryName().equals(categoryName)) ||
+            if ((productID != null && x.getProductID().equalsIgnoreCase(productID)) ||
+                    (productName != null && x.getProductName().equalsIgnoreCase(productName)) ||
+                    (categoryID != null && x.getProductCategoryID().equalsIgnoreCase(categoryID)) ||
+                    (categoryName != null && x.getProductCategoryName().equalsIgnoreCase(categoryName)) ||
                     (priceRange != null
                             && Utilities.isInRange(x.getProductPrice(), priceRange))) {
                 result.add(x);
@@ -60,7 +60,7 @@ class Searcher {
     public static Category searchCategory(String categoryID, String categoryName) {
         for (Category x : Loader.loadCategories()) {
             if ((categoryID != null && x.getCategoryID().equals(categoryID)) ||
-                    (categoryName != null && x.getCategoryName().equals(categoryName))) {
+                    (categoryName != null && x.getCategoryName().equalsIgnoreCase(categoryName))) {
                 return x;
             }
         }
@@ -81,6 +81,26 @@ class Searcher {
         return result;
     }
 
+    public static ArrayList<Product> searchProductByID(String productID) {
+        return searchProduct(productID, null, null, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByName(String productName) {
+        return searchProduct(null, productName, null, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategoryID(String productCategoryID) {
+        return searchProduct(null, null, productCategoryID, null, null);
+    }
+
+    public static ArrayList<Product> searchProductByCategoryName(String productCategoryName) {
+        return searchProduct(null, null, null, productCategoryName, null);
+    }
+
+    public static ArrayList<Product> searchProductByPriceRange(double min, double max) {
+        return searchProduct(null, null, null, null, new double[] { min, max });
+    }
+
     public static ArrayList<Order> searchOrderByID(String orderID) {
         return searchOrder(orderID, null, null, null);
     }
@@ -95,5 +115,17 @@ class Searcher {
 
     public static ArrayList<Order> searchOrderByDate(String orderDate) {
         return searchOrder(null, null, null, orderDate);
+    }
+
+    public static OrderTotals searchOrderTotalFromOrderID(String orderID) {
+        ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
+        Utilities.printArrayList(allOrderTotals);
+        for (OrderTotals x : allOrderTotals) {
+            System.out.println(x.getOrderID() + " " + orderID);
+            if (x.getOrderID().equals(orderID)) {
+                return x;
+            }
+        }
+        return null;
     }
 }

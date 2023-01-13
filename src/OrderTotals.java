@@ -1,4 +1,3 @@
-import java.text.DecimalFormat;
 
 interface Order_Totals {
     String ORDER_TOTALS = "order_totals.txt";
@@ -6,7 +5,7 @@ interface Order_Totals {
     int total = 1;
 }
 
-public class OrderTotals implements Order_Totals, AttributeFormat {
+    class OrderTotals implements Order_Totals, AttributeFormat {
     private String orderID;
     private Double orderTotals;
 
@@ -34,10 +33,9 @@ public class OrderTotals implements Order_Totals, AttributeFormat {
 
     @Override
     public String[] getWriteFormat() {
-        DecimalFormat df = new DecimalFormat("#.00");
         return new String[] {
                 orderID,
-                df.format(orderTotals)
+                String.valueOf(orderTotals)
         };
     }
 

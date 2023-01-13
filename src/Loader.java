@@ -9,7 +9,7 @@ interface Delimiter {
     String TEXT_DELIMITER = ",";
 }
 
-class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails, OrderProduct, OrderInfo {
+class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails, OrderProduct, OrderInfo, Order_Totals {
     public static String[] readParser(String content) {
         String[] parts = content.split(TEXT_DELIMITER);
         return parts;
@@ -46,18 +46,21 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
 
     public static ArrayList<Customer> loadCustomers() {
         ArrayList<String[]> loaded = rawLoader(CUSTOMER_DETAILS);
-            }
     ArrayList<Customer> allCustomers = new ArrayList<>();
-        for (String[] x : loaded) {
-        allCustomers.add(new Customer(x));
+        if (loaded.size() != 0) {
+            for (String[] x : loaded) {
+                allCustomers.add(new Customer(x));
+            }
     }
         return allCustomers;
 }
     public static ArrayList<Product> loadProduct() {
         ArrayList<String[]> loaded = rawLoader(PRODUCT_DETAILS);
         ArrayList<Product> allProducts = new ArrayList<>();
-        for (String[] x : loaded) {
-            allProducts.add(new Product(x));
+        if (loaded.size() != 0) {
+            for (String[] x : loaded) {
+                allProducts.add(new Product(x));
+            }
         }
         return allProducts;
     }
@@ -65,8 +68,10 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
     public static ArrayList<Category> loadCategories() {
         ArrayList<String[]> loaded = rawLoader(CATEGORY_DETAIL);
         ArrayList<Category> allCategory = new ArrayList<>();
-        for (String[] x : loaded) {
-            allCategory.add(new Category(x));
+        if (loaded.size() != 0) {
+            for (String[] x : loaded) {
+                allCategory.add(new Category(x));
+            }
         }
         return allCategory;
     }
@@ -74,10 +79,12 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
     public static ArrayList<Product> loadOrderProduct(String orderID) {
         ArrayList<String[]> raw = rawLoader(ORDER_PRODUCT);
         ArrayList<Product> allProducts = new ArrayList<>();
-        for (String[] x : raw) {
-            if (x[OR_ID].equals(orderID)) {
-                for (Product y : Product.searchProductByID(x[PR_ID]))
-                    allProducts.add(y);
+        if (raw.size() != 0) {
+            for (String[] x : raw) {
+                if (x[OR_ID].equals(orderID)) {
+                    for (Product y : Searcher.searchProductByID(x[PR_ID]))
+                        allProducts.add(y);
+                }
             }
         }
         Collections.sort(allProducts, Product.byID());
@@ -87,7 +94,24 @@ class Loader implements Delimiter, SensitiveData, ProductDetail, CategoryDetails
     public static ArrayList<Order> loadOrder() {
         ArrayList<String[]> loaded = rawLoader(ORDER_DETAILS);
         ArrayList<Order> allOrders = new ArrayList<>();
-        for (String[] x : loaded) {
+        if (loaded.size() != 0) {
+            if (loaded.size() != 0) {
+                for (String[] x : loaded) {
+                    allOrders.add(new Order(x));
+                }
+            }
+
+            return allOrders;
+        }
+    }
+
+    public static ArrayList<OrderTotals> loadOrderTotals() {
+        ArrayList<String[]> loaded = rawLoader(ORDER_TOTALS);
+        ArrayList<OrderTotals> allOrders = new ArrayList<>();
+        if (loaded.size() != 0) {
+            for (String[] x : loaded) {
+                allOrders.add(new OrderTotals(x));
+            }
             allOrders.add(new Order(x));
         }
         return allOrders;

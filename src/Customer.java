@@ -75,9 +75,13 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
 
     public double getCustomerSpending() {
         double totalSpending = 0;
-        for (Order x : getOrders()) {
-            if (x.getOrderStatus().equals(DELIVERED))
-                totalSpending += x.calculateTotal() - x.getOrderDiscount();
+        ArrayList<Order> thisOrders = getOrders();
+        ArrayList<String> orderIDs = Utilities.getAllOrderIDs(thisOrders);
+        ArrayList<OrderTotals> allTotals = Loader.loadOrderTotals();
+        for (OrderTotals x : allTotals) {
+            if (orderIDs.contains(x.getOrderID())) {
+                totalSpending += x.getOrderTotals();
+            }
         }
         return totalSpending;
     }
@@ -108,7 +112,78 @@ class Customer extends User implements LoginInfo, UserInfo, Membership, OrderSta
         return this.customerID;
     }
 
-    public void setCustomerID(String newID) {
-        this.customerID = newID;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
+
+    public boolean setCustomerUsername(String newUsername) {
+        if (Loader.rawSearcher(SensitiveData.CUSTOMER_DETAILS, new String[] { newUsername }) != null) {
+            System.out.println("Username already exist!");
+            return false;
+        }
+        this.setUsername(newUsername);
+        return true;
+    }
+
+    public void updateInfo(String newUsername, String newPassword, String newName) {
+        String oldUsername = getUsername(), oldPassword = getPassword(), oldName = getCustomerName();
+        if (newUsername != null) {
+            if (!setCustomerUsername(newUsername)) {
+                System.out.println("Username did not change");
+            }
+        }
+        if (newPassword != null) {
+            this.setPassword(newPassword);
+        }
+        if (newName != null) {
+            this.setCustomerName(newName);
+        }
+
+        Writer.replaceLine(SensitiveData.CUSTOMER_DETAILS,
+                String.format("%s%s%s", oldUsername, Delimiter.TEXT_DELIMITER, oldPassword),
+                Writer.writeParser(this.CustomerFormat()));
+    }
+
+    public void updateInfo() {
+        System.out.println("Enter username (Leave empty [Enter] if not change): ");
+        String newUsername = UserInput.getInput();
+        System.out.println("Enter password: ");
+        String newPassword = UserInput.getInput();
+        System.out.println("Enter name: ");
+        String newName = UserInput.getInput();
+        updateInfo(newUsername, newPassword, newName);
+        System.out.println(this);
+    }
+
+    public void newOrder() {
+        ArrayList<Product> cart = Product.addToCart();
+        if (cart.size() == 0) {
+            System.out.println("Cart is empty. Cancel.");
+            return;
+        }
+        Order newOrder = newOrder(cart);
+        System.out.println("Order successfully placed!");
+        this.addOrder(newOrder);
+        System.out.println(newOrder);
+        System.out.println("View all orders? (Y/N)");
+        if (UserInput.getConfirmation("Y", "N")) {
+            Utilities.printArrayList(getOrders());
+        }
+    }
+
+    public Order newOrder(ArrayList<Product> cart) {
+        int totalOrders = Loader.loadOrder().size();
+        Order order = new Order(getUsername(), Utilities.IDFormatter(totalOrders), cart, PLACED);
+        Writer.appendFile(OrderInfo.ORDER_DETAILS, Writer.writeParser(
+                order.getWriteFormat()));
+        for (String[] x : order.getOrderProductWriteFormat()) {
+            Writer.appendFile(OrderProduct.ORDER_PRODUCT, Writer.writeParser(x));
+        }
+        return order;
+    }
+
+    public void addOrder(Order order) {
+        this.customerOrder.add(order);
+    }
+
 }
