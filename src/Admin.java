@@ -23,13 +23,13 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
             }
         } else {
             Utilities.printArrayList(curr);
+
         }
     }
 
     @Override
     public String toString() {
-        return "Admin [username=" + super.getUsername() + ", " +
-                "password=" + super.getPassword() + "]";
+        return "Admin [username=" + super.getUsername() + ", password=" + super.getPassword() + "]";
     }
 
     public Order changeOrderStatus(String orderID, String orderStatus) {
@@ -284,7 +284,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
 
     }
 
-    public double getTotalRevenue() {
+    public Double getTotalRevenue() {
         ArrayList<OrderTotals> allOrderTotals = Loader.loadOrderTotals();
         Double totalRevenue = 0.0;
         for (OrderTotals x : allOrderTotals) {
