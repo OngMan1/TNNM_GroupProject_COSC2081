@@ -9,3 +9,4 @@
 008,Iphone X,22.0,003
 009,Iphone 6s,6.0,003
 010,Colorpop lipstick,3.0,004
+011,4 floors house,100000.0,005
