@@ -95,8 +95,8 @@ class Searcher {
 
     public static Category searchCategory(String categoryID, String categoryName) {
         for (Category x : Loader.loadCategories()) {
-            if ((categoryID != null && x.getCategoryID().equalsIgnoreCase(categoryID) ||
-                    (categoryName != null && x.getCategoryName().equalsIgnoreCase(categoryName)))) {
+            if ((categoryID != null && x.getCategoryID().equalsIgnoreCase(categoryID)) ||
+                    (categoryName != null && x.getCategoryName().equalsIgnoreCase(categoryName))) {
                 return x;
             }
         }

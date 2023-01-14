@@ -1,0 +1,11 @@
+000,Oreo,2.0,002
+001,Milk tea,3.0,002
+002,Macbook Pro,50.0,001
+003,Iphone 14,35.0,003
+004,Blue jacket,12.0,000
+005,Dior lipstick,22.0,004
+006,Green t-shirt,2.0,000
+007,Macbook Air,45.0,001
+008,Iphone X,22.0,003
+009,Iphone 6s,6.0,003
+010,Colorpop lipstick,3.0,004

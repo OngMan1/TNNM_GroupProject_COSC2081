@@ -11,8 +11,8 @@ interface LoginInfo {
 }
 
 interface SensitiveData {
-    String CUSTOMER_DETAILS = "src/user.txt";
-    String ADMIN_DETAILS = "src/admin.txt";
+    String CUSTOMER_DETAILS = "src/user_details.txt";
+    String ADMIN_DETAILS = "src/admin_details.txt";
 }
 
 class Authentication implements LoginType, SensitiveData, LoginInfo {
@@ -32,7 +32,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
         String username = UserInput.getInput();
         System.out.print("Password: ");
         String password = UserInput.getInput();
-        String[] result = {username, password};
+        String[] result = { username, password };
         return result;
     }
 
@@ -83,7 +83,7 @@ class Authentication implements LoginType, SensitiveData, LoginInfo {
                 return null;
         }
 
-        String[] userInput = {username, password};
+        String[] userInput = { username, password };
         String[] loginRecord = Loader.rawSearcher(file, userInput, true, true);
         if (loginRecord == null) {
             System.out.println("Error: Invalid username or password");

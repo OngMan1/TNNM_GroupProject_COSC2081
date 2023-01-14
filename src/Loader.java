@@ -48,7 +48,7 @@ class Loader
 
     public static ArrayList<Customer> loadCustomers() {
         ArrayList<String[]> loaded = rawLoader(CUSTOMER_DETAILS);
-    ArrayList<Customer> allCustomers = new ArrayList<>();
+        ArrayList<Customer> allCustomers = new ArrayList<>();
         if (loaded.size() != 0) {
             for (String[] x : loaded) {
                 allCustomers.add(new Customer(x));

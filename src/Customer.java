@@ -24,8 +24,8 @@ interface Membership {
 }
 
 class Customer extends User implements LoginInfo, UserInfo, OrderStatus {
-    private String customerName;
     private String customerID;
+    private String customerName;
     private ArrayList<Order> customerOrder = new ArrayList<>();
     private String customerMembership;
 
@@ -37,7 +37,7 @@ class Customer extends User implements LoginInfo, UserInfo, OrderStatus {
         this.customerMembership = calculateMembership();
     }
 
-    public Customer(String[] parts) {    // take input as a split string
+    public Customer(String[] parts) {
         this(parts[UserInfo.USERNAME],
                 parts[UserInfo.PASSWORD],
                 parts[UserInfo.ID],

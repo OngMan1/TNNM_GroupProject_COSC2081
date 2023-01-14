@@ -1,11 +1,10 @@
-
 interface Order_Totals {
     String ORDER_TOTALS = "src/order_totals.txt";
     int ID = 0;
     int total = 1;
 }
 
-    class OrderTotals implements Order_Totals, AttributeFormat {
+class OrderTotals implements Order_Totals, AttributeFormat {
     private String orderID;
     private Double orderTotals;
 

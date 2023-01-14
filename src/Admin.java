@@ -71,7 +71,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
                 oldOrder = orders.get(0);
                 break;
             }
-            System.out.println("Couldn't find order with ID " + orderID + ". Try again? (Y/N): ");
+            System.out.println("Couldn't find order_details.txt with ID " + orderID + ". Try again? (Y/N): ");
             if (!UserInput.getConfirmation("Y", "N")) {
                 return;
             }
@@ -79,7 +79,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         System.out.println(oldOrder);
         System.out.println("Change to " + OrderStatus.DELIVERED + "? (Y/N): ");
         if (UserInput.getConfirmation("Y", "N") && oldOrder.getOrderStatus().equals(OrderStatus.PLACED)) {
-            System.out.println("New order: ");
+            System.out.println("New order_details.txt: ");
             System.out.println(oldOrder);
             System.out.println("Confirm changes? (Y/N):");
             if (UserInput.getConfirmation("Y", "N")) {
@@ -305,7 +305,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         return totalRevenue;
     }
 
-    private class ProductSalePair {
+    private static class ProductSalePair {
         Product product;
         int sale;
 
@@ -407,7 +407,7 @@ class Admin extends User implements SensitiveData, LoginInfo, ProductDetail, Cat
         }
     }
 
-    private class CustomerSpending {
+    private static class CustomerSpending {
         Customer customer;
         Double spending;
 

@@ -1,11 +1,11 @@
-import java.util.Scanner;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class UserInput {
-    private static Scanner sc = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
 
     public static String getInput() {
-        String input = sc.nextLine();
+        String input = scanner.nextLine();
         if (input.isBlank()) {
             return null;
         }

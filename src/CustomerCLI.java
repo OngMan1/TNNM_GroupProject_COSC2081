@@ -70,7 +70,7 @@ public class CustomerCLI implements CLI, CustomerCLIIndex {
                 if (tmp != null) {
                     Utilities.printArrayList(tmp);
                 } else {
-                    System.out.println("Couldn't find order");
+                    System.out.println("Couldn't find order_details.txt");
                 }
 
                 break;

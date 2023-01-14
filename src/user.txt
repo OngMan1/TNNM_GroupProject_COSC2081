@@ -1,8 +1,0 @@
-debt,super,000,verynice
-super,super,001,super
-super2,super2,002,super2
-super3,super,003,3
-duper,duper,004,duper
-dupers,dupers,005,dupers
-roadside,picnic,006,russia
-tel,aviv,007,israel

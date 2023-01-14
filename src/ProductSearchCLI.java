@@ -52,7 +52,6 @@ public class ProductSearchCLI implements CLI, ProductCLIIndex {
                     query = UserInput.getInput();
                     if (query == null)
                         break;
-
                     productFiltered.addAll(Searcher.searchProductByCategory(query));
                     break;
                 case BY_PRICE_RANGE:

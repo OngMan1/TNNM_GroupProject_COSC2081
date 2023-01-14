@@ -1,15 +1,5 @@
-000,None
-001,TypeA
-002,TypeB
-003,TypeC
-004,TypeD
-005,TypeE
-006,World Cup
-007,Food
-008,Alcohol
-009,Anime
-010,Anti-deodorant
-011,Video Game
-012,Tableware
-013,Meta
-014,Music
+000,Fashion
+001,Laptop
+002,F&B
+003,Phone
+004,Makeup

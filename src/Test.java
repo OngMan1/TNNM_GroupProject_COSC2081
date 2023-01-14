@@ -5,11 +5,11 @@ public class Test implements OrderStatus {
         // session.customerRegistration();
 
         // String[] testing = {
-        //        "admin",
-        //       "123456"
+        // "microporereckonings",
+        // "dillymencalkshitherward"
         // };
         // Admin sessAdmin = session.Admin_Login(testing);
-        // System.out.println(sessAdmin);  */
+        // System.out.println(sessAdmin);
 
         // System.out.println(Searcher.searchOrderByID("003"));
         // sessAdmin.viewAllCustomers(false);
@@ -25,12 +25,12 @@ public class Test implements OrderStatus {
         Authentication session = new Authentication();
 
         // String[] testing = {
-        //        "glancedkryokonite",
-        //        "columbinefaienceschesapeake"
+        // "glancedkryokonite",
+        // "columbinefaienceschesapeake"
         // };
         // Customer currCustomer = session.Customer_Login(testing);
         // System.out.println(currCustomer);
-        // currCustomer.searchProduct();
+        // // currCustomer.searchProduct();
         // Product.browseProducts();
         // currCustomer.newOrder();
 

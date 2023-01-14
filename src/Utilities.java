@@ -107,7 +107,7 @@ class Utilities implements IDFormat, Membership {
         return matcher.find();
     }
 
-// Source: https://stackoverflow.com/a/2459753
+    // Source: https://stackoverflow.com/a/2459753
 
     public static <E> int countOccurence(ArrayList<E> list, E thing) {
         return Collections.frequency(list, thing);

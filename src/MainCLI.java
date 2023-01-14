@@ -55,14 +55,13 @@ public class MainCLI implements CLI, MainCLIIndex {
 
     public String[] getWelcomeScreen() {
         String[] welcome = {
-                "CBRPNK2077 GROUP ASSIGNMENT",
+                "GROUP ASSIGNMENT - COSC2081",
                 "NEW WORLD ORDER MANAGEMENT SYSTEM",
-                "Instructor: Jordan Peterson",
-                "Group: SuperIdolDeXiaoRong",
-                "BugSnax 1, Student Name",
-                "BugSnax 2, Student Name",
-                "BugSnax 3, Student Name",
-                "BugSnax 4, Student Name",
+                "Group: TNNM",
+                "Student 1, Nguyen Ngoc Minh Thu",
+                "Student 2, Ong Gia Man",
+                "Student 3, Nguyen Le Thu Nhan",
+                "Student 4, Tran Minh Nhat",
         };
         return welcome;
     }
