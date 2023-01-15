@@ -9,25 +9,12 @@ import java.util.List;
 
 class Writer implements Delimiter {
     public static String writeParser(String[] content) {
+        // takes a string array and join each element by the TEXT_DELIMITER
         return String.join(TEXT_DELIMITER, content);
     }
 
     public static void appendFile(String filename, String content) {
         try {
-            // content = content.strip();
-            // BufferedReader reader = new BufferedReader(new FileReader(filename));
-            // String line;
-            // String lastLine = "";
-            // while ((line = reader.readLine()) != null) {
-            // lastLine = line;
-            // System.out.println(lastLine);
-            // }
-            // reader.close();
-
-            // if (lastLine != "\n") { // !lastLine.isEmpty() &&
-            // content = "\n" + content;
-            // }
-
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
             writer.append(content);
             writer.close();

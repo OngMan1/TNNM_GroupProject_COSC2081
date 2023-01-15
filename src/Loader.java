@@ -6,17 +6,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 interface Delimiter {
+    // create an interface for containing the static delimiter, easier to modify and call to use
     String TEXT_DELIMITER = ",";
 }
 
 class Loader
         implements Delimiter, SensitiveData, ProductDetail, CategoryDetails, OrderProduct, OrderInfo, Order_Totals {
-    public static String[] readParser(String content) {
+    public static String[] readParser(String content) {    // pass a line as parameter
         String[] parts = content.split(TEXT_DELIMITER);
-        return parts;
+        return parts;      // return a new array of string value after split
     }
 
     public static ArrayList<String[]> rawLoader(String file_name) {
+        // this method takes in a file name and return all split lines as arrays in an arraylist
         BufferedReader reader = null;
         ArrayList<String[]> all = new ArrayList<>();
         try {
@@ -47,6 +49,7 @@ class Loader
     }
 
     public static ArrayList<Customer> loadCustomers() {
+        // read from Customer file and return an arraylist of all Customer objects
         ArrayList<String[]> loaded = rawLoader(CUSTOMER_DETAILS);
         ArrayList<Customer> allCustomers = new ArrayList<>();
         if (loaded.size() != 0) {
@@ -58,6 +61,8 @@ class Loader
         return allCustomers;
     }
 
+    /* similar to loadCustomers(), create methods:
+    loadProduct(), loadCategories(), loadOrderProduct(), loadOrder(), loadOrderTotals() */
     public static ArrayList<Product> loadProduct() {
         ArrayList<String[]> loaded = rawLoader(PRODUCT_DETAILS);
         ArrayList<Product> allProducts = new ArrayList<>();
@@ -132,7 +137,7 @@ class Loader
 
     public static String[] rawSearcher(String file_name, String[] searchInput, boolean matchCase, boolean matchAll) {
         BufferedReader reader = null;
-
+        
         try {
             File file = new File(file_name);
             if (!file.exists()) {

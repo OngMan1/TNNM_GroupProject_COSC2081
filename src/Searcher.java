@@ -4,6 +4,8 @@ class Searcher {
     public static ArrayList<Customer> searchCustomer(String customerUsername, String customerID, String customerName,
                                                      double[] customerSpendingRange,
                                                      String customerMembership) {
+        // checks if the passed parameters match the customer's properties, if so, add the customer to the result
+        //ArrayList and returns it
         ArrayList<Customer> curr = Loader.loadCustomers();
         ArrayList<Customer> res = new ArrayList<>();
         for (Customer x : curr) {
@@ -41,6 +43,7 @@ class Searcher {
         return Searcher.searchCustomer(null, null, null, null, customerMembership);
     }
 
+    // apply similar of the searchCustomer() for the other methods
     public static ArrayList<Product> searchProduct(String productID, String productName, String categoryID,
                                                    String categoryName, double[] priceRange) {
         ArrayList<Product> result = new ArrayList<>();
