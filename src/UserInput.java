@@ -36,6 +36,7 @@ public class UserInput {
     }
 
     public static void clearConsole() { // Source: https://stackoverflow.com/a/64038023
+        // is used to clear console
         try {
             if (System.getProperty("os.name").contains("Windows")) {
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();

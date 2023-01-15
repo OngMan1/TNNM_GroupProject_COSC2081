@@ -12,9 +12,6 @@ interface ProductDetail {
     int CATEGORY = 3;
 }
 
-// interface ProductPriceFormat {
-// DecimalFormat df = new DecimalFormat("#.00");
-// }
 
 class Product implements ProductDetail, AttributeFormat {
     private String productID, productName;
